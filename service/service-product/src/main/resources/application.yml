@@ -7,3 +7,6 @@ spring:
     nacos:
       discovery:
         server-addr: jachen.com:8848
+  devtools:
+    livereload:
+      enabled: false  # remove Unable to start LiveReload server
