@@ -75,7 +75,7 @@
                 <version>${mysql.version}</version>
             </dependency>
 
-            <!-- swagger2 API接口文档 -->
+            <!-- swagger2 自动生成Swagger文档的库 -->
             <dependency>
                 <groupId>io.springfox</groupId>
                 <artifactId>springfox-swagger2</artifactId>

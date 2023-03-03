@@ -18,6 +18,17 @@
 
     <dependencies>
 
+        <!-- swagger2 自动生成Swagger文档的库 -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+        </dependency>
+        <!-- swagger ui -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+        </dependency>
+
         <!-- Web 应用程序驱动 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -32,17 +43,6 @@
             <artifactId>lombok</artifactId>
         </dependency>
 
-        <!-- swagger -->
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-        </dependency>
-        <!-- swagger ui -->
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-        </dependency>
-
         <!-- 用来转换json使用 {JavaObject - json | json - JavaObject} -->
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -50,11 +50,11 @@
         </dependency>
 
         <!-- 服务调用feign -->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-starter-openfeign</artifactId>-->
-<!--            <scope>provided </scope>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
     </dependencies>
 
