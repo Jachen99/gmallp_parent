@@ -33,7 +33,7 @@ public class CodeGet {
 
         // 3、数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://192.168.253.137:3308/gmall_product?characterEncoding=utf-8");
+        dsc.setUrl("jdbc:mysql://jachen.com:3308/gmall_product?characterEncoding=utf-8");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("root");
         dsc.setPassword("123456");
