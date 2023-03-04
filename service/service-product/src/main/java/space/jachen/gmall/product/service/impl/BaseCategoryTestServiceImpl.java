@@ -1,11 +1,11 @@
 package space.jachen.gmall.product.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import space.jachen.gmall.product.entity.BaseCategory3;
-import space.jachen.gmall.product.mapper.BaseCategory3Mapper;
-import space.jachen.gmall.product.service.BaseCategory3Service;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import space.jachen.gmall.product.mapper.BaseCategoryTestMapper;
 import org.springframework.stereotype.Service;
+import space.jachen.gmall.product.service.BaseCategoryTestService;
 
 import java.util.List;
 
@@ -18,7 +18,11 @@ import java.util.List;
  * @since 2023-03-03
  */
 @Service
-public class BaseCategory3ServiceImpl extends ServiceImpl<BaseCategory3Mapper, BaseCategory3> implements BaseCategory3Service {
+@SuppressWarnings("all")
+public class BaseCategoryTestServiceImpl implements BaseCategoryTestService {
+
+    @Autowired
+    private BaseCategoryTestMapper baseCategoryTestMapper;
 
     @Override
     public List<BaseCategory3> findBaseCategory3ByCategory3IdList() {
@@ -26,7 +30,7 @@ public class BaseCategory3ServiceImpl extends ServiceImpl<BaseCategory3Mapper, B
         BaseCategory3 baseCategory3 = new BaseCategory3();
         baseCategory3.setId(160L);
 
-        return baseMapper.selectList(
+        return baseCategoryTestMapper.selectList(
                 new LambdaQueryWrapper<BaseCategory3>(){{
                     eq(BaseCategory3::getId,baseCategory3.getId());
                 }}

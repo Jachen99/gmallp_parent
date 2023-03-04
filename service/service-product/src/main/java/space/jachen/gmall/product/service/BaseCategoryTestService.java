@@ -13,7 +13,7 @@ import java.util.List;
  * @author jachen
  * @since 2023-03-03
  */
-public interface BaseCategory3Service extends IService<BaseCategory3> {
+public interface BaseCategoryTestService{
 
 
     /**

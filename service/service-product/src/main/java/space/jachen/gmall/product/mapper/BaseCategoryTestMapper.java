@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author jachen
  * @since 2023-03-03
  */
-public interface BaseCategory3Mapper extends BaseMapper<BaseCategory3> {
+public interface BaseCategoryTestMapper extends BaseMapper<BaseCategory3> {
 
 }
