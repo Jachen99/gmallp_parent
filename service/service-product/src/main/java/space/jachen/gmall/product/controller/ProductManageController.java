@@ -7,9 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 import space.jachen.gmall.common.result.Result;
-import space.jachen.gmall.domain.product.BaseCategory1;
-import space.jachen.gmall.domain.product.BaseCategory2;
-import space.jachen.gmall.domain.product.BaseCategory3;
+import space.jachen.gmall.domain.product.*;
+import space.jachen.gmall.product.service.BaseAttrService;
 import space.jachen.gmall.product.service.BaseCategoryService;
 
 import java.util.List;
@@ -25,7 +24,30 @@ import java.util.List;
 public class ProductManageController {
 
     @Autowired
-    private BaseCategoryService baseCategory1Service;
+    private BaseCategoryService baseCategoryService;
+    @Autowired
+    private BaseAttrService baseAttrService;
+
+
+    /**
+     * /admin/product/attrInfoList/{category1Id}/{category2Id}/{category3Id}
+     * @param category1Id  一级分类id
+     * @param category2Id  二级分类id
+     * @param category3Id  三级分类id
+     * 根据分类Id 获取平台属性集合
+     *
+     * @return
+     */
+    @GetMapping("/attrInfoList/{category1Id}/{category2Id}/{category3Id}")
+    public Result<List<BaseAttrInfo>> attrInfoList(
+            @PathVariable Long category1Id,
+            @PathVariable Long category2Id,
+            @PathVariable Long category3Id){
+        List<BaseAttrInfo> valueList = baseAttrService.attrInfoList(category1Id,category2Id,category3Id);
+
+        return Result.ok(valueList);
+    }
+
 
     /**
      * /admin/product/getCategory3/{category2Id}
@@ -36,7 +58,7 @@ public class ProductManageController {
      */
     @GetMapping("getCategory3/{category2Id}")
     public Result<List<BaseCategory3>> getCategory3(@PathVariable Long category2Id){
-        List<BaseCategory3> category3List = baseCategory1Service.getCategory3(category2Id);
+        List<BaseCategory3> category3List = baseCategoryService.getCategory3(category2Id);
 
         return Result.ok(category3List);
     }
@@ -51,7 +73,7 @@ public class ProductManageController {
      */
     @GetMapping("/getCategory2/{category1Id}")
     public Result<List<BaseCategory2>> getCategory2(@PathVariable Long category1Id){
-        List<BaseCategory2> category2List = baseCategory1Service.getCategory2(category1Id);
+        List<BaseCategory2> category2List = baseCategoryService.getCategory2(category1Id);
 
         return Result.ok(category2List);
     }
@@ -65,7 +87,7 @@ public class ProductManageController {
      */
     @GetMapping("/getCategory1")
     public Result<List<BaseCategory1>> getCategory1(){
-        List<BaseCategory1> category1List = baseCategory1Service.getCategory1();
+        List<BaseCategory1> category1List = baseCategoryService.getCategory1();
 
         return Result.ok(category1List);
     }

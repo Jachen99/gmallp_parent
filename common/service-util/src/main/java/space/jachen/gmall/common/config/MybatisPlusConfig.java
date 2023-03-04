@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 @EnableTransactionManagement
 @Configuration
-@MapperScan("space.jachen.gmall.*.mapper")
 public class MybatisPlusConfig {
 
     /**

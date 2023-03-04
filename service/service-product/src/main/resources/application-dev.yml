@@ -1,7 +1,7 @@
 server:
   port: 8206
 mybatis-plus:
-  mapper-locations: classpath:/product/mapper/*/*.xml
+  mapper-locations: classpath:space/jachen/gmall/product/mapper/xml/*Mapper.xml
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 spring:

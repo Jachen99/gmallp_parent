@@ -1,5 +1,6 @@
 package space.jachen.gmall.product.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
 import space.jachen.gmall.domain.product.BaseCategory3;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -11,6 +12,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author jachen
  * @since 2023-03-03
  */
+@Mapper
 public interface BaseCategoryTestMapper extends BaseMapper<BaseCategory3> {
 
 }

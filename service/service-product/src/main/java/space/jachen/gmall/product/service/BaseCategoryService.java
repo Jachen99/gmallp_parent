@@ -1,5 +1,6 @@
 package space.jachen.gmall.product.service;
 
+import space.jachen.gmall.domain.product.BaseAttrInfo;
 import space.jachen.gmall.domain.product.BaseCategory1;
 import space.jachen.gmall.domain.product.BaseCategory2;
 import space.jachen.gmall.domain.product.BaseCategory3;
@@ -7,9 +8,7 @@ import space.jachen.gmall.domain.product.BaseCategory3;
 import java.util.List;
 
 /**
- * <p>
- * 一级分类表 服务类
- * </p>
+ * 平台分类表 服务类
  *
  * @author jachen
  * @since 2023-03-03
@@ -38,4 +37,5 @@ public interface BaseCategoryService {
      * @return  List<BaseCategory3>
      */
     List<BaseCategory3> getCategory3(Long category2Id);
+
 }
