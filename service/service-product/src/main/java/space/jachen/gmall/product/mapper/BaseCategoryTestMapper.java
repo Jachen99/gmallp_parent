@@ -1,6 +1,6 @@
 package space.jachen.gmall.product.mapper;
 
-import space.jachen.gmall.product.entity.BaseCategory3;
+import space.jachen.gmall.domain.product.BaseCategory3;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**

@@ -2,7 +2,7 @@ package space.jachen.gmall.product.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
-import space.jachen.gmall.product.entity.BaseCategory1;
+import space.jachen.gmall.domain.product.BaseCategory1;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 import java.util.List;

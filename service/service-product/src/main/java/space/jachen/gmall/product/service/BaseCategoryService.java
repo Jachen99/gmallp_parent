@@ -1,7 +1,6 @@
 package space.jachen.gmall.product.service;
 
-import space.jachen.gmall.product.entity.BaseCategory1;
-import com.baomidou.mybatisplus.extension.service.IService;
+import space.jachen.gmall.domain.product.BaseCategory1;
 
 import java.util.List;
 

@@ -2,7 +2,7 @@ package space.jachen.gmall.product.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import space.jachen.gmall.product.entity.BaseCategory3;
+import space.jachen.gmall.domain.product.BaseCategory3;
 import space.jachen.gmall.product.mapper.BaseCategoryTestMapper;
 import org.springframework.stereotype.Service;
 import space.jachen.gmall.product.service.BaseCategoryTestService;

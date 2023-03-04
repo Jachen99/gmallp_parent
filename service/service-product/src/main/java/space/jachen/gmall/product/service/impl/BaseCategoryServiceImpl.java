@@ -1,7 +1,7 @@
 package space.jachen.gmall.product.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import space.jachen.gmall.product.entity.BaseCategory1;
+import space.jachen.gmall.domain.product.BaseCategory1;
 import space.jachen.gmall.product.mapper.BaseCategoryMapper;
 import org.springframework.stereotype.Service;
 import space.jachen.gmall.product.service.BaseCategoryService;

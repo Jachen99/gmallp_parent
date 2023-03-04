@@ -3,11 +3,10 @@ package space.jachen.gmall.product.BaseCategory3Test;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import space.jachen.gmall.product.entity.BaseCategory3;
+import space.jachen.gmall.domain.product.BaseCategory3;
 import space.jachen.gmall.product.service.BaseCategory3Service;
 import space.jachen.gmall.product.service.BaseCategoryTestService;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**

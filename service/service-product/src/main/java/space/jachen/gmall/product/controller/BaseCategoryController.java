@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 import space.jachen.gmall.common.result.Result;
-import space.jachen.gmall.product.entity.BaseCategory1;
+import space.jachen.gmall.domain.product.BaseCategory1;
 import space.jachen.gmall.product.service.BaseCategoryService;
 
 import java.util.List;
