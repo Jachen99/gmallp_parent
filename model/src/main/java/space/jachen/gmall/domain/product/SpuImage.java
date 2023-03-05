@@ -7,27 +7,34 @@ import lombok.EqualsAndHashCode;
 import space.jachen.gmall.domain.base.BaseEntity;
 
 /**
- * 商品品牌
+ * Spu 图片
+ * 商品图片
  *
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@TableName("base_trademark")
-public class BaseTrademark extends BaseEntity {
+@TableName("spu_image")
+public class SpuImage extends BaseEntity {
 	
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 属性值
+	 * 商品id
 	 */
-	@TableField("tm_name")
-	private String tmName;
+	@TableField("spu_id")
+	private Long spuId;
 
 	/**
-	 * 品牌logo的图片路径
+	 * 图片名称
 	 */
-	@TableField("logo_url")
-	private String logoUrl;
+	@TableField("img_name")
+	private String imgName;
+
+	/**
+	 * 图片路径
+	 */
+	@TableField("img_url")
+	private String imgUrl;
 
 }
 
