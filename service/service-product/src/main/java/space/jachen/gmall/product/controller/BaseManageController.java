@@ -28,7 +28,6 @@ public class BaseManageController {
 
 
     /**
-     * /admin/product/getAttrValueList/{attrId}
      * 根据平台属性Id 获取到平台属性值集合
      * @param attrId  属性id
      *
@@ -43,7 +42,6 @@ public class BaseManageController {
 
 
     /**
-     * /admin/product/saveAttrInfo
      * 保存-修改平台属性
      * @param baseAttrInfo    平台属性对象
      *
@@ -59,13 +57,12 @@ public class BaseManageController {
 
 
     /**
-     * /admin/product/attrInfoList/{category1Id}/{category2Id}/{category3Id}
+     * 根据分类Id 获取平台属性集合
      * @param category1Id  一级分类id
      * @param category2Id  二级分类id
      * @param category3Id  三级分类id
-     * 根据分类Id 获取平台属性集合
      *
-     * @return
+     * @return  List<BaseAttrInfo>
      */
     @GetMapping("/attrInfoList/{category1Id}/{category2Id}/{category3Id}")
     public Result<List<BaseAttrInfo>> attrInfoList(
@@ -79,9 +76,8 @@ public class BaseManageController {
 
 
     /**
-     * /admin/product/getCategory3/{category2Id}
-     * @param category2Id  二级分类id
      * 获取三级分类数据
+     * @param category2Id  二级分类id
      *
      * @return  List<BaseCategory3>
      */
@@ -94,9 +90,8 @@ public class BaseManageController {
 
 
     /**
-     * /admin/product/getCategory2/{category1Id}
-     * @param category1Id  一级分类id
      * 根据一级id获取二级分类数据
+     * @param category1Id  一级分类id
      *
      * @return  List<BaseCategory2>
      */
@@ -109,8 +104,8 @@ public class BaseManageController {
 
 
     /**
-     * /admin/product/getCategory1
      * 获取一级分类数据
+     * /admin/product/getCategory1
      *
      * @return  List<BaseCategory1>
      */
