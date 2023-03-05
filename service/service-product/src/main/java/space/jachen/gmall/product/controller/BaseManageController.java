@@ -14,14 +14,14 @@ import space.jachen.gmall.product.service.BaseCategoryService;
 import java.util.List;
 
 /**
- * 商品管理
+ * 商品后台 - 基本信息管理
  *
  * @author jachen
  * @since 2023-03-03
  */
 @RestController
 @RequestMapping("/admin/product")
-public class ProductManageController {
+public class BaseManageController {
 
     @Autowired
     private BaseCategoryService baseCategoryService;
