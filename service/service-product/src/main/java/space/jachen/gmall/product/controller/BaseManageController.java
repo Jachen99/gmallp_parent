@@ -1,11 +1,8 @@
 package space.jachen.gmall.product.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RestController;
 import space.jachen.gmall.common.result.Result;
 import space.jachen.gmall.domain.product.*;
 import space.jachen.gmall.product.service.BaseAttrService;
@@ -27,6 +24,38 @@ public class BaseManageController {
     private BaseCategoryService baseCategoryService;
     @Autowired
     private BaseAttrService baseAttrService;
+
+
+
+    /**
+     * /admin/product/getAttrValueList/{attrId}
+     * 根据平台属性Id 获取到平台属性值集合
+     * @param attrId  属性id
+     *
+     * @return  Result<List<BaseAttrValue>>
+     */
+    @GetMapping("/getAttrValueList/{attrId}")
+    public Result<List<BaseAttrValue>> getAttrValueList(@PathVariable Long attrId){
+        List<BaseAttrValue> attrValueList =  baseAttrService.getAttrValueList(attrId);
+
+        return Result.ok(attrValueList);
+    }
+
+
+    /**
+     * /admin/product/saveAttrInfo
+     * 保存-修改平台属性
+     * @param baseAttrInfo    平台属性对象
+     *
+     * @return  返回响应状态
+     */
+    @PostMapping("/saveAttrInfo")
+    public Result<Object> saveAttrInfo(@RequestBody BaseAttrInfo baseAttrInfo){
+        baseAttrService.saveAttrInfo(baseAttrInfo);
+
+        return Result.ok();
+    }
+
 
 
     /**
