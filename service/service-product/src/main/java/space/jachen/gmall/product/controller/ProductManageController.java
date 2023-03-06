@@ -38,9 +38,9 @@ public class ProductManageController {
     public Result<IPage<SpuInfo>> getSpuPageList(@PathVariable Long page, @PathVariable Long limit, SpuInfo spuInfo){
         // 封装分页对象
         IPage<SpuInfo> spuPage = new Page<>(page,limit);
-        IPage<SpuInfo> spuInfoPage = baseSpuService.getSpuPageList(spuPage,spuInfo);
+        spuPage = baseSpuService.getSpuPageList(spuPage,spuInfo);
 
-        return Result.ok(spuInfoPage);
+        return Result.ok(spuPage);
     }
 
 }
