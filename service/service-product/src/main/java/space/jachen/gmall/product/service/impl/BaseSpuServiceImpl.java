@@ -21,11 +21,12 @@ public class BaseSpuServiceImpl implements BaseSpuService {
 
     @Override
     public IPage<SpuInfo> getSpuPageList(IPage<SpuInfo> spuPage, SpuInfo spuInfo) {
-        // 条件查询
-        IPage<SpuInfo> infoIPage = spuInfoMapper.selectPage(spuPage,
-                new LambdaQueryWrapper<SpuInfo>() {{
-                    eq(SpuInfo::getCategory3Id, spuInfo.getCategory3Id());
-                }});
-        return infoIPage;
+        LambdaQueryWrapper<SpuInfo> wrapper = new LambdaQueryWrapper<SpuInfo>() {{
+            eq(SpuInfo::getCategory3Id, spuInfo.getCategory3Id())
+                    // 根据id排序
+                    .orderByDesc(SpuInfo::getId);
+        }};
+        // 查询
+        return spuInfoMapper.selectPage(spuPage, wrapper);
     }
 }
