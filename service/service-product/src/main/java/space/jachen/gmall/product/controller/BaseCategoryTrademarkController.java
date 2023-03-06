@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import space.jachen.gmall.common.result.Result;
 import space.jachen.gmall.domain.product.BaseCategoryTrademark;
+import space.jachen.gmall.domain.product.BaseTrademark;
 import space.jachen.gmall.product.service.BaseCategoryTrademarkService;
 
 import java.util.List;
@@ -32,17 +33,13 @@ public class BaseCategoryTrademarkController {
      * 根据category3Id获取品牌列表
      * @param category3Id 三级分类的id
      *
-     * @return List<BaseCategoryTrademark>
+     * @return List<BaseTrademark>
      */
     @GetMapping("/findTrademarkList/{category3Id}")
-    public Result<List<BaseCategoryTrademark> > findTrademarkList(@PathVariable Long category3Id){
-        List<BaseCategoryTrademark> baseCategoryTrademarks = baseCategoryTrademarkService.getBaseMapper().selectList(
-                new LambdaQueryWrapper<BaseCategoryTrademark>() {{
-                    eq(BaseCategoryTrademark::getCategory3Id, category3Id);
-                }}
-        );
+    public Result<List<BaseTrademark>> findTrademarkList(@PathVariable Long category3Id){
+        List<BaseTrademark> baseTrademarkList = baseCategoryTrademarkService.findTrademarkList(category3Id);
 
-        return Result.ok(baseCategoryTrademarks);
+        return Result.ok(baseTrademarkList);
     }
 
 }
