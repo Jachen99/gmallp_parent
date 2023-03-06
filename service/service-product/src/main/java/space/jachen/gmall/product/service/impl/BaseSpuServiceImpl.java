@@ -51,15 +51,11 @@ public class BaseSpuServiceImpl extends ServiceImpl<SpuInfoMapper,SpuInfo> imple
         // 存 spuImage spu图片信息
         List<SpuImage> spuImageList = spuInfo.getSpuImageList();
         if ( !CollectionUtils.isEmpty(spuImageList)){
-/*            spuImageList.stream().map(spuImage -> {
+            // 使用流式处理 遍历集合
+            spuImageList.forEach(spuImage ->{
                 spuImage.setSpuId(spuInfo.getId());
-                return spuImageMapper.insert(spuImage);
-            });*/
-            for (SpuImage spuImage : spuImageList) {
-                spuImage.setSpuId(spuInfo.getId());
-
                 spuImageMapper.insert(spuImage);
-            }
+            });
         }
         // 存 spuPoster 海报信息
         List<SpuPoster> spuPosterList = spuInfo.getSpuPosterList();
