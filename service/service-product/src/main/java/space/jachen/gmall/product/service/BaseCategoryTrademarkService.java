@@ -21,4 +21,12 @@ public interface BaseCategoryTrademarkService extends IService<BaseCategoryTrade
      * @return List<BaseTrademark>
      */
     List<BaseTrademark> findTrademarkList(Long category3Id);
+
+    /**
+     * 根据category3Id获取可选品牌列表
+     * @param category3Id  三级分类id
+     *
+     * @return List<BaseTrademark>
+     */
+    List<BaseTrademark> findCurrentTrademarkList(Long category3Id);
 }

@@ -81,6 +81,7 @@ public class BaseTradeMarkController {
      * 品牌分页列表
      * @param page  当前页
      * @param limit  每页个数
+     *
      * @return IPage<BaseTrademark>
      */
     @GetMapping("/{page}/{limit}")

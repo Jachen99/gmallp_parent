@@ -12,6 +12,12 @@ import space.jachen.gmall.domain.product.BaseTrademark;
  */
 public interface BaseTrademarkService extends IService<BaseTrademark> {
 
+    /**
+     * 品牌分页列表
+     * @param baseTrademarkIPage  IPage 对象
+     *
+     * @return IPage<BaseTrademark>
+     */
     IPage<BaseTrademark> getBaseTrademarkPage(IPage<BaseTrademark> baseTrademarkIPage);
 
 }

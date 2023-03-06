@@ -1,17 +1,15 @@
 package space.jachen.gmall.product.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RestController;
 import space.jachen.gmall.common.result.Result;
-import space.jachen.gmall.domain.product.BaseCategoryTrademark;
 import space.jachen.gmall.domain.product.BaseTrademark;
 import space.jachen.gmall.product.service.BaseCategoryTrademarkService;
+import space.jachen.gmall.product.service.BaseTrademarkService;
 
 import java.util.List;
 
@@ -28,6 +26,24 @@ public class BaseCategoryTrademarkController {
 
     @Autowired
     private BaseCategoryTrademarkService baseCategoryTrademarkService;
+    @Autowired
+    private BaseTrademarkService baseTrademarkService;
+
+
+    /**
+     * 根据category3Id获取可选品牌列表
+     * @param category3Id  三级分类id
+     *
+     * @return List<BaseTrademark>
+     */
+    @GetMapping("/findCurrentTrademarkList/{category3Id}")
+    public Result<List<BaseTrademark>> findCurrentTrademarkList(@PathVariable Long category3Id){
+        List<BaseTrademark> baseTrademarkList = baseCategoryTrademarkService.findCurrentTrademarkList(category3Id);
+
+        return Result.ok(baseTrademarkList);
+    }
+
+
 
     /**
      * 根据category3Id获取品牌列表
