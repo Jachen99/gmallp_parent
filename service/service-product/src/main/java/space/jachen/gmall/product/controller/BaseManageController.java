@@ -18,8 +18,6 @@ import java.util.List;
 /**
  * 商品后台 - 基本信息管理
  *   -- 平台属性列表
- *   -- 品牌列表
- *   -- 分类品牌
  *
  * @author jachen
  * @since 2023-03-03
@@ -33,33 +31,9 @@ public class BaseManageController {
     @Autowired
     private BaseAttrService baseAttrService;
 
-    @Autowired
-    private BaseTrademarkService baseTrademarkService;
-
-
-    @GetMapping("/baseTrademark/{page}/{limit}")
-    public Result<IPage<BaseTrademark>> getBaseTrademarkPage(@PathVariable Long page,@PathVariable Long limit){
-        // 封装分页条件
-        IPage<BaseTrademark> baseTrademarkIPage = new Page<>(page,limit);
-        baseTrademarkIPage = baseTrademarkService.getBaseTrademarkPage(baseTrademarkIPage);
-
-        return Result.ok(baseTrademarkIPage);
-    }
-
-
-
-
-
-
-
-
-
-
-
-
 
     /**
-     * 根据平台属性Id 获取到平台属性值集合
+     * 回显平台属性值集合
      * @param attrId  属性id
      *
      * @return  Result<List<BaseAttrValue>>

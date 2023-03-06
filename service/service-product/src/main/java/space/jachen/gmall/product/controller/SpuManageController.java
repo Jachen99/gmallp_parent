@@ -21,7 +21,7 @@ import space.jachen.gmall.product.service.BaseSpuService;
  */
 @RestController
 @RequestMapping("/admin/product")
-public class ProductManageController {
+public class SpuManageController {
 
     @Autowired
     private BaseSpuService baseSpuService;
