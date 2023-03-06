@@ -5,8 +5,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+import space.jachen.gmall.common.execption.GmallException;
+import space.jachen.gmall.common.result.ResultCodeEnum;
 import space.jachen.gmall.domain.product.BaseCategoryTrademark;
 import space.jachen.gmall.domain.product.BaseTrademark;
+import space.jachen.gmall.domain.product.CategoryTrademarkVo;
 import space.jachen.gmall.product.mapper.BaseCategoryTrademarkMapper;
 import space.jachen.gmall.product.mapper.BaseTrademarkMapper;
 import space.jachen.gmall.product.service.BaseCategoryTrademarkService;
@@ -57,7 +61,7 @@ public class BaseCategoryTrademarkServiceImpl extends ServiceImpl<BaseCategoryTr
         if ( CollectionUtils.isEmpty(baseCategoryTrademarks) ){
             return baseTrademarkMapper.selectList(null);
         }
-        // 排除 从 BaseCategoryTrademark 对象；并获取剩下 BaseTrademark对象 的 ids 集合
+        // 从 BaseCategoryTrademark 对象获取 BaseTrademark 的 ids 集合
         List<Long> ids = baseCategoryTrademarks.stream()
                 .map(BaseCategoryTrademark::getTrademarkId)
                 .collect(Collectors.toList());
@@ -65,5 +69,31 @@ public class BaseCategoryTrademarkServiceImpl extends ServiceImpl<BaseCategoryTr
                 // 排除已有品牌id
                 .filter(baseTrademark -> !ids.contains(baseTrademark.getId()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void saveTrademark(CategoryTrademarkVo categoryTrademarkVo) {
+        if (StringUtils.isEmpty(categoryTrademarkVo)){
+            throw new GmallException(ResultCodeEnum.FAIL);
+        }
+        // 获取 Vo 对象里的 ids 集合
+        List<Long> trademarkIdList = categoryTrademarkVo.getTrademarkIdList();
+        if ( !CollectionUtils.isEmpty(trademarkIdList) ){
+            // 获取 trademarkIdList 中的 id
+            List<BaseCategoryTrademark> baseCategoryTrademarkList = trademarkIdList.stream()
+                    .map(tmId -> {
+                        // 创建分类与品牌的关联对象 BaseCategoryTrademark
+                        BaseCategoryTrademark categoryTrademark = new BaseCategoryTrademark();
+                        // 属性赋值 id
+                        categoryTrademark.setTrademarkId(tmId);
+                        // category3Id
+                        categoryTrademark.setCategory3Id(categoryTrademarkVo.getCategory3Id());
+                        return categoryTrademark;
+                    }).collect(Collectors.toList());
+            // 调用 IService 的批处理方法
+            this.saveBatch(baseCategoryTrademarkList);
+        }
+
+
     }
 }

@@ -2,14 +2,11 @@ package space.jachen.gmall.product.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import space.jachen.gmall.common.result.Result;
 import space.jachen.gmall.domain.product.BaseTrademark;
+import space.jachen.gmall.domain.product.CategoryTrademarkVo;
 import space.jachen.gmall.product.service.BaseCategoryTrademarkService;
-import space.jachen.gmall.product.service.BaseTrademarkService;
 
 import java.util.List;
 
@@ -26,8 +23,20 @@ public class BaseCategoryTrademarkController {
 
     @Autowired
     private BaseCategoryTrademarkService baseCategoryTrademarkService;
-    @Autowired
-    private BaseTrademarkService baseTrademarkService;
+
+
+    /**
+     * 保存分类品牌关联
+     * @param categoryTrademarkVo  三级分类编号和品牌id集合
+     *
+     * @return Result<Object>
+     */
+    @PostMapping("/save")
+    public Result<Object> saveTrademark(@RequestBody CategoryTrademarkVo categoryTrademarkVo){
+        baseCategoryTrademarkService.saveTrademark(categoryTrademarkVo);
+
+        return Result.ok();
+    }
 
 
     /**
@@ -42,7 +51,6 @@ public class BaseCategoryTrademarkController {
 
         return Result.ok(baseTrademarkList);
     }
-
 
 
     /**

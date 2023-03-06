@@ -3,6 +3,7 @@ package space.jachen.gmall.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import space.jachen.gmall.domain.product.BaseCategoryTrademark;
 import space.jachen.gmall.domain.product.BaseTrademark;
+import space.jachen.gmall.domain.product.CategoryTrademarkVo;
 
 import java.util.List;
 
@@ -29,4 +30,10 @@ public interface BaseCategoryTrademarkService extends IService<BaseCategoryTrade
      * @return List<BaseTrademark>
      */
     List<BaseTrademark> findCurrentTrademarkList(Long category3Id);
+
+    /**
+     * 保存分类品牌关联
+     * @param categoryTrademarkVo  三级分类编号和品牌id集合
+     */
+    void saveTrademark(CategoryTrademarkVo categoryTrademarkVo);
 }
