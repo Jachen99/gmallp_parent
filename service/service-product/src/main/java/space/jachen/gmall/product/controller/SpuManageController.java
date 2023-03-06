@@ -5,8 +5,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import space.jachen.gmall.common.result.Result;
+import space.jachen.gmall.domain.product.BaseSaleAttr;
 import space.jachen.gmall.domain.product.SpuInfo;
-import space.jachen.gmall.domain.product.SpuSaleAttr;
 import space.jachen.gmall.product.service.BaseSaleAttrService;
 import space.jachen.gmall.product.service.BaseSpuService;
 
@@ -37,13 +37,12 @@ public class SpuManageController {
      * @return  List<BaseAttrValue>
      */
     @GetMapping("/baseSaleAttrList")
-    public Result<List<SpuSaleAttr>> baseSaleAttrList(){
-        List<SpuSaleAttr> baseAttrValueList = baseSaleAttrService.list();
+    public Result<List<BaseSaleAttr>> baseSaleAttrList(){
+        List<BaseSaleAttr> baseAttrValueList = baseSaleAttrService.list();
+        System.out.println("baseAttrValueList = " + baseAttrValueList);
 
         return Result.ok(baseAttrValueList);
     }
-
-
 
 
     /**

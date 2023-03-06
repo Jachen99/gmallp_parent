@@ -2,7 +2,7 @@ package space.jachen.gmall.product.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
-import space.jachen.gmall.domain.product.SpuSaleAttr;
+import space.jachen.gmall.domain.product.BaseSaleAttr;
 import space.jachen.gmall.product.mapper.BaseSaleAttrMapper;
 import space.jachen.gmall.product.service.BaseSaleAttrService;
 
@@ -13,6 +13,6 @@ import space.jachen.gmall.product.service.BaseSaleAttrService;
  * @since 2023-03-06
  */
 @Service
-public class BaseSaleAttrServiceImpl extends ServiceImpl<BaseSaleAttrMapper, SpuSaleAttr> implements BaseSaleAttrService {
+public class BaseSaleAttrServiceImpl extends ServiceImpl<BaseSaleAttrMapper, BaseSaleAttr> implements BaseSaleAttrService {
 
 }
