@@ -32,6 +32,20 @@ public class SpuManageController {
 
 
     /**
+     * 保存新增 spu对象
+     * @param spuInfo  spuInfo
+     *
+     * @return  响应成功
+     */
+    @PostMapping("/saveSpuInfo")
+    public Result<Object> saveSpuInfo(@RequestBody SpuInfo spuInfo){
+        baseSpuService.saveSpuInfo(spuInfo);
+
+        return Result.ok();
+    }
+
+
+    /**
      * 获取销售属性数据
      *
      * @return  List<BaseAttrValue>
@@ -43,22 +57,6 @@ public class SpuManageController {
 
         return Result.ok(baseAttrValueList);
     }
-
-
-    /**
-     * 保存新增 spu对象
-     * @param spuInfo  spuInfo
-     *
-     * @return  响应成功
-     */
-    @PostMapping("/saveSpuInfo")
-    public Result<Object> saveSpuInfo(@RequestBody SpuInfo spuInfo){
-        baseSpuService.save(spuInfo);
-
-        return Result.ok();
-    }
-
-
 
 
 

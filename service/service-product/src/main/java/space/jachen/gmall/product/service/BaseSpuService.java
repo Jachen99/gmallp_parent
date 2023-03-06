@@ -18,4 +18,10 @@ public interface BaseSpuService extends IService<SpuInfo> {
      * @return   Page<SpuInfo>
      */
     IPage<SpuInfo> getSpuPageList(IPage<SpuInfo> spuPage, SpuInfo spuInfo);
+
+    /**
+     * 保存新增 spu对象
+     * @param spuInfo  spuInfo
+     */
+    void saveSpuInfo(SpuInfo spuInfo);
 }
