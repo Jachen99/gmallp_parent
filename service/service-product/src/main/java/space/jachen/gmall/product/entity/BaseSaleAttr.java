@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 
 /**
  * <p>
- * 三级分类表
+ * 基本销售属性表
  * </p>
  *
  * @author jachen
@@ -17,7 +17,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class BaseCategoryTrademark implements Serializable {
+public class BaseSaleAttr implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -28,14 +28,9 @@ public class BaseCategoryTrademark implements Serializable {
     private Long id;
 
     /**
-     * 三级级分类id
+     * 销售属性名称
      */
-    private Long category3Id;
-
-    /**
-     * 品牌id
-     */
-    private Long trademarkId;
+    private String name;
 
     /**
      * 创建时间

@@ -3,13 +3,14 @@ package space.jachen.gmall.product.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import space.jachen.gmall.common.result.Result;
 import space.jachen.gmall.domain.product.SpuInfo;
+import space.jachen.gmall.domain.product.SpuSaleAttr;
+import space.jachen.gmall.product.service.BaseSaleAttrService;
 import space.jachen.gmall.product.service.BaseSpuService;
+
+import java.util.List;
 
 /**
  * 商品后台 - 商品信息管理
@@ -25,6 +26,42 @@ public class SpuManageController {
 
     @Autowired
     private BaseSpuService baseSpuService;
+    @Autowired
+    private BaseSaleAttrService baseSaleAttrService;
+
+
+
+    /**
+     * 获取销售属性数据
+     *
+     * @return  List<BaseAttrValue>
+     */
+    @GetMapping("/baseSaleAttrList")
+    public Result<List<SpuSaleAttr>> baseSaleAttrList(){
+        List<SpuSaleAttr> baseAttrValueList = baseSaleAttrService.list();
+
+        return Result.ok(baseAttrValueList);
+    }
+
+
+
+
+    /**
+     * 保存新增 spu对象
+     * @param spuInfo  spuInfo
+     *
+     * @return  响应成功
+     */
+    @PostMapping("/saveSpuInfo")
+    public Result<Object> saveSpuInfo(@RequestBody SpuInfo spuInfo){
+        baseSpuService.save(spuInfo);
+
+        return Result.ok();
+    }
+
+
+
+
 
     /**
      * spu分页列表
