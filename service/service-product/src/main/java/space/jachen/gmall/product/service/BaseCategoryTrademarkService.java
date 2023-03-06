@@ -1,7 +1,7 @@
 package space.jachen.gmall.product.service;
 
-import space.jachen.gmall.product.entity.BaseCategoryTrademark;
 import com.baomidou.mybatisplus.extension.service.IService;
+import space.jachen.gmall.domain.product.BaseCategoryTrademark;
 
 /**
  * 分类品牌 服务类

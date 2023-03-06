@@ -1,6 +1,6 @@
 package space.jachen.gmall.product.service.impl;
 
-import space.jachen.gmall.product.entity.BaseCategoryTrademark;
+import space.jachen.gmall.domain.product.BaseCategoryTrademark;
 import space.jachen.gmall.product.mapper.BaseCategoryTrademarkMapper;
 import space.jachen.gmall.product.service.BaseCategoryTrademarkService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
