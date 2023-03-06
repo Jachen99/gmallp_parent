@@ -7,9 +7,7 @@ import space.jachen.gmall.product.mapper.BaseSaleAttrMapper;
 import space.jachen.gmall.product.service.BaseSaleAttrService;
 
 /**
- * <p>
  * 基本销售属性表 服务实现类
- * </p>
  *
  * @author jachen
  * @since 2023-03-06
