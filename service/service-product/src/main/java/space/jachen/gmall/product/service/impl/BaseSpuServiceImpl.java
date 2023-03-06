@@ -82,6 +82,8 @@ public class BaseSpuServiceImpl extends ServiceImpl<SpuInfoMapper,SpuInfo> imple
                 if ( !CollectionUtils.isEmpty(spuSaleAttrValueList)){
                     for (SpuSaleAttrValue spuSaleAttrValue : spuSaleAttrValueList) {
                         spuSaleAttrValue.setSpuId(spuInfo.getId());
+                        // 要设置 spuSaleAttrValue 表里的 属性 name 字段
+                        spuSaleAttrValue.setSaleAttrName(spuSaleAttr.getSaleAttrName());
                         spuSaleAttrValueMapper.insert(spuSaleAttrValue);
                     }
                 }
