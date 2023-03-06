@@ -36,4 +36,11 @@ public interface BaseCategoryTrademarkService extends IService<BaseCategoryTrade
      * @param categoryTrademarkVo  三级分类编号和品牌id集合
      */
     void saveTrademark(CategoryTrademarkVo categoryTrademarkVo);
+
+    /**
+     * 删除分类品牌关联
+     * @param category3Id  三级分类id
+     * @param trademarkId  品牌id
+     */
+    void removeTrademark(Long category3Id, Long trademarkId);
 }

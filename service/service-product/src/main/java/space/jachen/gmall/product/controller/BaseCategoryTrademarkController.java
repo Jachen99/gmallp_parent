@@ -26,13 +26,29 @@ public class BaseCategoryTrademarkController {
 
 
     /**
+     * 删除分类品牌关联
+     * @param category3Id  三级分类id
+     * @param trademarkId  品牌id
+     *
+     * @return Result<Object>
+     */
+    @DeleteMapping("/remove/{category3Id}/{trademarkId}")
+    public Result<Object> removeTrademark(@PathVariable Long category3Id, @PathVariable Long trademarkId){
+        baseCategoryTrademarkService.removeTrademark(category3Id, trademarkId);
+
+        return Result.ok();
+    }
+
+
+
+    /**
      * 保存分类品牌关联
      * @param categoryTrademarkVo  三级分类编号和品牌id集合
      *
      * @return Result<Object>
      */
     @PostMapping("/save")
-    public Result<Object> saveTrademark(@RequestBody CategoryTrademarkVo categoryTrademarkVo){
+    public Result<Object> saveTrademarks(@RequestBody CategoryTrademarkVo categoryTrademarkVo){
         baseCategoryTrademarkService.saveTrademark(categoryTrademarkVo);
 
         return Result.ok();

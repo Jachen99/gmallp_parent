@@ -45,6 +45,7 @@ public class BaseCategoryTrademarkServiceImpl extends ServiceImpl<BaseCategoryTr
         List<Long> ids = baseCategoryTrademarks.stream()
                 .map(BaseCategoryTrademark::getTrademarkId)
                 .collect(Collectors.toList());
+
         //  根据 ids 获取 BaseTrademark 列表
         return baseTrademarkMapper.selectBatchIds(ids);
 
@@ -65,6 +66,7 @@ public class BaseCategoryTrademarkServiceImpl extends ServiceImpl<BaseCategoryTr
         List<Long> ids = baseCategoryTrademarks.stream()
                 .map(BaseCategoryTrademark::getTrademarkId)
                 .collect(Collectors.toList());
+
         return baseTrademarkMapper.selectList(null).stream()
                 // 排除已有品牌id
                 .filter(baseTrademark -> !ids.contains(baseTrademark.getId()))
@@ -90,10 +92,20 @@ public class BaseCategoryTrademarkServiceImpl extends ServiceImpl<BaseCategoryTr
                         categoryTrademark.setCategory3Id(categoryTrademarkVo.getCategory3Id());
                         return categoryTrademark;
                     }).collect(Collectors.toList());
+
             // 调用 IService 的批处理方法
             this.saveBatch(baseCategoryTrademarkList);
         }
 
+    }
 
+    @Override
+    public void removeTrademark(Long category3Id, Long trademarkId) {
+        LambdaQueryWrapper<BaseCategoryTrademark> wrapper = new LambdaQueryWrapper<>();
+        // 封装删除条件
+        wrapper.eq(BaseCategoryTrademark::getCategory3Id,category3Id);
+        wrapper.eq(BaseCategoryTrademark::getTrademarkId,trademarkId);
+
+        baseMapper.delete(wrapper);
     }
 }
