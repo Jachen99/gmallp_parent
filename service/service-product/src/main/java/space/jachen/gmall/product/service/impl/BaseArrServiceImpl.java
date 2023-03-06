@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import space.jachen.gmall.common.execption.GmallException;
 import space.jachen.gmall.common.result.ResultCodeEnum;
@@ -52,8 +53,9 @@ public class BaseArrServiceImpl implements BaseAttrService {
                     eq(BaseAttrValue::getAttrId,baseAttrInfo.getId());
                 }}
         );
+        // 进行更新操作
         List<BaseAttrValue> attrValueList = baseAttrInfo.getAttrValueList();
-        if ( !StringUtils.isEmpty(attrValueList) && attrValueList.size() > 0 ){
+        if ( !CollectionUtils.isEmpty(attrValueList) && attrValueList.size() > 0 ){
             for (BaseAttrValue baseAttrValue : attrValueList) {
                 baseAttrValue.setAttrId(baseAttrInfo.getId());
 
