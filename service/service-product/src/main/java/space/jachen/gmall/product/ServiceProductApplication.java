@@ -11,7 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
  * @date 2023/03/03
  */
 @SpringBootApplication
-@ComponentScan(basePackages = "space.jachen.gmall")
+@ComponentScan(basePackages = "space.jachen.gmall.common")
 public class ServiceProductApplication {
     public static void main(String[] args) {
         SpringApplication.run(ServiceProductApplication.class);
