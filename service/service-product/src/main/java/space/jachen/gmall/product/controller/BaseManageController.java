@@ -1,5 +1,9 @@
 package space.jachen.gmall.product.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -7,11 +11,15 @@ import space.jachen.gmall.common.result.Result;
 import space.jachen.gmall.domain.product.*;
 import space.jachen.gmall.product.service.BaseAttrService;
 import space.jachen.gmall.product.service.BaseCategoryService;
+import space.jachen.gmall.product.service.BaseTrademarkService;
 
 import java.util.List;
 
 /**
  * 商品后台 - 基本信息管理
+ *   -- 平台属性列表
+ *   -- 品牌列表
+ *   -- 分类品牌
  *
  * @author jachen
  * @since 2023-03-03
@@ -24,6 +32,29 @@ public class BaseManageController {
     private BaseCategoryService baseCategoryService;
     @Autowired
     private BaseAttrService baseAttrService;
+
+    @Autowired
+    private BaseTrademarkService baseTrademarkService;
+
+
+    @GetMapping("/baseTrademark/{page}/{limit}")
+    public Result<IPage<BaseTrademark>> getBaseTrademarkPage(@PathVariable Long page,@PathVariable Long limit){
+        // 封装分页条件
+        IPage<BaseTrademark> baseTrademarkIPage = new Page<>(page,limit);
+        baseTrademarkIPage = baseTrademarkService.getBaseTrademarkPage(baseTrademarkIPage);
+
+        return Result.ok(baseTrademarkIPage);
+    }
+
+
+
+
+
+
+
+
+
+
 
 
 
