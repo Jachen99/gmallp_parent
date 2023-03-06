@@ -11,4 +11,15 @@
 
     <artifactId>service-product</artifactId>
 
+    <dependencies>
+
+        <!-- 对象存储服务 -->
+        <dependency>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+            <version>8.2.0</version>
+        </dependency>
+
+    </dependencies>
+
 </project>
