@@ -20,4 +20,16 @@ public interface BaseSkuService {
      * @return IPage<SkuInfo>
      */
     IPage<SkuInfo> getSkuListPage(IPage<SkuInfo> skuInfoIPage);
+
+    /**
+     * 商品上架
+     * @param skuId  skuId
+     */
+    void onSale(Long skuId);
+
+    /**
+     * 商品下架
+     * @param skuId  skuId
+     */
+    void cancelSale(Long skuId);
 }

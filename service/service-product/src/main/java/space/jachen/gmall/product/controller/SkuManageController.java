@@ -31,6 +31,33 @@ public class SkuManageController {
 
 
     /**
+     * 商品下架
+     * @param skuId  skuId
+     * @return  ok
+     */
+    @GetMapping("/cancelSale/{skuId}")
+    public Result<Object> cancelSale(@PathVariable Long skuId){
+        baseSkuService.cancelSale(skuId);
+
+        return Result.ok();
+    }
+
+
+
+    /**
+     * 商品上架
+     * @param skuId  skuId
+     * @return  ok
+     */
+    @GetMapping("/onSale/{skuId}")
+    public Result<Object> onSale(@PathVariable Long skuId){
+        baseSkuService.onSale(skuId);
+
+        return Result.ok();
+    }
+
+
+    /**
      * sku分页列表
      * @param page  当前页
      * @param limit  每页条数

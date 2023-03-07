@@ -74,4 +74,25 @@ public class BaseSkuServiceImpl implements BaseSkuService {
 
         return skuInfoMapper.selectPage(skuInfoIPage,null);
     }
+
+    @Override
+    public void onSale(Long skuId) {
+
+        SkuInfo skuInfo = new SkuInfo();
+        skuInfo.setId(skuId);
+        skuInfo.setIsSale(1);
+
+        skuInfoMapper.updateById(skuInfo);
+    }
+
+    @Override
+    public void cancelSale(Long skuId) {
+
+        SkuInfo skuInfo = new SkuInfo();
+        skuInfo.setId(skuId);
+        skuInfo.setIsSale(0);
+
+        skuInfoMapper.updateById(skuInfo);
+    }
+
 }
