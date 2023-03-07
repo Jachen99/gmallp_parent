@@ -10,6 +10,7 @@ import space.jachen.gmall.domain.product.BaseAttrInfo;
 import space.jachen.gmall.domain.product.SkuInfo;
 import space.jachen.gmall.product.service.BaseSkuService;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -26,6 +27,21 @@ public class ProductManagerApiController {
 
     @Autowired
     private BaseSkuService baseSkuService;
+
+
+    /**
+     * 根据skuId 获取最新的商品价格
+     * @param skuId  商品唯一编号 skuId
+     *
+     * @return BigDecimal
+     */
+    @GetMapping("/inner/getSkuPrice/{skuId}")
+    public BigDecimal getSkuPrice(@PathVariable Long skuId){
+
+        return baseSkuService.getSkuPrice(skuId);
+    }
+
+
 
 
     /**

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import space.jachen.gmall.domain.product.BaseAttrInfo;
 import space.jachen.gmall.domain.product.SkuInfo;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -52,4 +53,12 @@ public interface BaseSkuService {
      * @return  List<BaseAttrInfo>
      */
     List<BaseAttrInfo> getAttrListBySkuId(Long skuId);
+
+    /**
+     * 根据skuId 获取最新的商品价格
+     * @param skuId  商品唯一编号 skuId
+     *
+     * @return BigDecimal
+     */
+    BigDecimal getSkuPrice(Long skuId);
 }

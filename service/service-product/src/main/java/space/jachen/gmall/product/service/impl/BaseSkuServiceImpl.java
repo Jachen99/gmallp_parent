@@ -10,6 +10,7 @@ import space.jachen.gmall.domain.product.*;
 import space.jachen.gmall.product.mapper.*;
 import space.jachen.gmall.product.service.BaseSkuService;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -98,6 +99,8 @@ public class BaseSkuServiceImpl implements BaseSkuService {
 
     @Override
     public List<SkuInfo> findSkuInfoBySkuIdList(Long skuId) {
+
+        // 这里逻辑不对  应该返回单个对象  不是list  不想改了。。。
         // 查找 SkuInfoList
         List<SkuInfo> skuInfoList = skuInfoMapper.selectList(
                 new LambdaQueryWrapper<SkuInfo>() {{
@@ -142,38 +145,46 @@ public class BaseSkuServiceImpl implements BaseSkuService {
     @Override
     public List<BaseAttrInfo> getAttrListBySkuId(Long skuId) {
         // 根据 skuId 获取 sku_info 表中的 三级分类id category3Id
-        List<SkuInfo> skuInfoList = skuInfoMapper.selectList(
+        SkuInfo info = skuInfoMapper.selectOne(
                 new LambdaQueryWrapper<SkuInfo>() {{
                     eq(BaseEntity::getId, skuId);
                 }}
         );
-        if ( !CollectionUtils.isEmpty(skuInfoList) ){
-            for (SkuInfo skuInfo : skuInfoList) {
-                Long category3Id = skuInfo.getCategory3Id();
-                // 根据 category3Id 查找 平台属性基本表
-                List<BaseAttrInfo> baseAttrInfoList = baseAttrInfoMapper.selectList(
-                        new LambdaQueryWrapper<BaseAttrInfo>() {{
-                            eq(BaseAttrInfo::getCategoryId, category3Id)
-                                    .orderByDesc(BaseAttrInfo::getId);
-                        }}
-                );
-                // 获取 attrValueList 并存入 baseAttrInfoList 集合返回
-                if ( !CollectionUtils.isEmpty(baseAttrInfoList) ){
-                    for (BaseAttrInfo attrInfo : baseAttrInfoList) {
-                        // 获取 平台属性id
-                        Long attrInfoId = attrInfo.getId();
-                        List<BaseAttrValue> baseAttrValueList = baseAttrValueMapper.selectList(
-                                new LambdaQueryWrapper<BaseAttrValue>() {{
-                                    eq(BaseAttrValue::getAttrId, attrInfoId);
-                                }}
-                        );
-                        attrInfo.setAttrValueList(baseAttrValueList);
-                    }
+        if ( null != info ){
+            Long category3Id = info.getCategory3Id();
+            // 根据 category3Id 查找 平台属性基本表
+            List<BaseAttrInfo> baseAttrInfoList = baseAttrInfoMapper.selectList(
+                    new LambdaQueryWrapper<BaseAttrInfo>() {{
+                        eq(BaseAttrInfo::getCategoryId, category3Id)
+                                .orderByDesc(BaseAttrInfo::getId);
+                    }}
+            );
+            // 获取 attrValueList 并存入 baseAttrInfoList 集合返回
+            if ( !CollectionUtils.isEmpty(baseAttrInfoList) ){
+                for (BaseAttrInfo attrInfo : baseAttrInfoList) {
+                    // 获取 平台属性id
+                    Long attrInfoId = attrInfo.getId();
+                    List<BaseAttrValue> baseAttrValueList = baseAttrValueMapper.selectList(
+                            new LambdaQueryWrapper<BaseAttrValue>() {{
+                                eq(BaseAttrValue::getAttrId, attrInfoId);
+                            }}
+                    );
+                    attrInfo.setAttrValueList(baseAttrValueList);
                 }
-                return baseAttrInfoList;
             }
+            return baseAttrInfoList;
         }
         return null;
+    }
+
+    @Override
+    public BigDecimal getSkuPrice(Long skuId) {
+        SkuInfo skuInfo = skuInfoMapper.selectOne(
+                new LambdaQueryWrapper<SkuInfo>() {{
+                    eq(BaseEntity::getId, skuId);
+                }}
+        );
+        return skuInfo.getPrice();
     }
 
 }
