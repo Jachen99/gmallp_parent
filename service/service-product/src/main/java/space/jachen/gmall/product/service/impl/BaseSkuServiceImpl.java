@@ -1,9 +1,11 @@
 package space.jachen.gmall.product.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import space.jachen.gmall.domain.base.BaseEntity;
 import space.jachen.gmall.domain.product.SkuAttrValue;
 import space.jachen.gmall.domain.product.SkuImage;
 import space.jachen.gmall.domain.product.SkuInfo;
@@ -15,6 +17,7 @@ import space.jachen.gmall.product.mapper.SkuSaleAttrValueMapper;
 import space.jachen.gmall.product.service.BaseSkuService;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author JaChen
@@ -93,6 +96,30 @@ public class BaseSkuServiceImpl implements BaseSkuService {
         skuInfo.setIsSale(0);
 
         skuInfoMapper.updateById(skuInfo);
+    }
+
+    @Override
+    public List<SkuInfo> findSkuInfoBySkuIdList(Long skuId) {
+        // 查找 SkuInfoList
+        List<SkuInfo> skuInfoList = skuInfoMapper.selectList(
+                new LambdaQueryWrapper<SkuInfo>() {{
+                    eq(BaseEntity::getId, skuId);
+                }}
+        );
+        // 如果 SkuInfoList 存在 -- > 则为 skuInfoList 列表中的每个 SkuInfo 对象设置 skuSaleAttrValueList 属性
+        if ( !CollectionUtils.isEmpty(skuInfoList) ){
+            Consumer<SkuInfo> skuInfoConsumer = skuInfo -> {
+                List<SkuSaleAttrValue> skuSaleAttrValues = skuSaleAttrValueMapper.selectList(
+                        new LambdaQueryWrapper<SkuSaleAttrValue>() {{
+                            eq(SkuSaleAttrValue::getSkuId, skuId);
+                        }}
+                );
+                skuInfo.setSkuSaleAttrValueList(skuSaleAttrValues);
+            };
+            skuInfoList.forEach(skuInfoConsumer);
+        }
+
+        return skuInfoList;
     }
 
 }

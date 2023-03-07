@@ -1,6 +1,5 @@
 package space.jachen.gmall.common.config;
 
-import com.google.common.base.Predicates;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -55,7 +54,7 @@ public class Swagger2Config {
                 .apiInfo(webApiInfo())
                 .select()
                 //过滤掉admin路径下的所有页面
-                .paths(Predicates.and(PathSelectors.regex("/api/.*")))
+                .paths(PathSelectors.regex("/api/.*"))
                 //过滤掉所有error或error.*页面
                 //.paths(Predicates.not(PathSelectors.regex("/error.*")))
                 .build()
@@ -71,7 +70,7 @@ public class Swagger2Config {
                 .apiInfo(adminApiInfo())
                 .select()
                 //只显示admin路径下的页面
-                .paths(Predicates.and(PathSelectors.regex("/admin/.*")))
+                .paths(PathSelectors.regex("/admin/.*"))
                 .build();
 
     }
@@ -82,7 +81,7 @@ public class Swagger2Config {
                 .title("网站-API文档")
                 .description("本文档描述了网站微服务接口定义")
                 .version("1.0")
-                .contact(new Contact("Helen", "http://atguigu.com", "55317332@qq.com"))
+                .contact(new Contact("Jachen", "https://blog.jiguanchen.space", "chenja630@gmail.com"))
                 .build();
     }
 
@@ -92,7 +91,7 @@ public class Swagger2Config {
                 .title("后台管理系统-API文档")
                 .description("本文档描述了后台管理系统微服务接口定义")
                 .version("1.0")
-                .contact(new Contact("Helen", "http://atguigu.com", "55317332@qq.com"))
+                .contact(new Contact("Helen", "https://blog.jiguanchen.space", "chenja630@gmail.com"))
                 .build();
     }
 

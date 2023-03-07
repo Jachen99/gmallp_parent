@@ -10,9 +10,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * <p>
  * SkuInfo
- * </p>
  *
  */
 @Data

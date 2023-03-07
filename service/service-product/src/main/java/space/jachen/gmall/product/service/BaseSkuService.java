@@ -3,6 +3,8 @@ package space.jachen.gmall.product.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import space.jachen.gmall.domain.product.SkuInfo;
 
+import java.util.List;
+
 /**
  * @author JaChen
  * @date 2023/3/7 11:15
@@ -32,4 +34,12 @@ public interface BaseSkuService {
      * @param skuId  skuId
      */
     void cancelSale(Long skuId);
+
+    /**
+     * item商品详情接口
+     *   - 根据 skuId 列表查询到 skuInfo 信息集合
+     * @param skuId  商品唯一编号 skuId
+     * @return List<SkuInfo>
+     */
+    List<SkuInfo> findSkuInfoBySkuIdList(Long skuId);
 }
