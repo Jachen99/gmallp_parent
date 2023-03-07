@@ -1,15 +1,9 @@
 package space.jachen.gmall.product.controller.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import space.jachen.gmall.common.result.Result;
-import space.jachen.gmall.domain.product.BaseAttrInfo;
-import space.jachen.gmall.domain.product.BaseTrademark;
-import space.jachen.gmall.domain.product.SkuInfo;
-import space.jachen.gmall.domain.product.SpuSaleAttr;
+import space.jachen.gmall.domain.product.*;
 import space.jachen.gmall.product.service.BaseSkuService;
 import space.jachen.gmall.product.service.BaseSpuService;
 import space.jachen.gmall.product.service.BaseTrademarkService;
@@ -38,6 +32,21 @@ public class ProductManagerApiController {
 
 
     /**
+     * 根据三级分类Id集合 查询
+     * @param categoryTrademarkVo  三级分类编号和品牌id集合 View
+     * @return List<BaseCategory3>
+     */
+    @PostMapping("/inner/findBaseCategory3ByCategory3IdList")
+    public Result<List<BaseCategory3>> findBaseCategory3ByCategory3IdList(@RequestBody CategoryTrademarkVo categoryTrademarkVo){
+        List<BaseCategory3> baseCategory3List = baseTrademarkService.findBaseCategory3ByCategory3IdList(categoryTrademarkVo);
+
+        return Result.ok(baseCategory3List);
+    }
+
+
+
+
+    /**
      * 根据品牌Id 获取品牌数据
      * @param tmId 品牌Id
      * @return  BaseTrademark
@@ -48,7 +57,6 @@ public class ProductManagerApiController {
 
         return Result.ok(baseTrademarkResult);
     }
-
 
 
 
