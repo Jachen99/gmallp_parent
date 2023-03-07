@@ -20,7 +20,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/admin/product")
-public class SKuManageController {
+public class SkuManageController {
 
     @Autowired
     private BaseSpuService baseSpuService;
