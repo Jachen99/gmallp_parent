@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import space.jachen.gmall.domain.product.SpuImage;
 import space.jachen.gmall.domain.product.SpuInfo;
+import space.jachen.gmall.domain.product.SpuSaleAttr;
 
 import java.util.List;
 
@@ -33,4 +34,12 @@ public interface BaseSpuService extends IService<SpuInfo> {
      * @param spuId  spuId
      */
     List<SpuImage> getSpuImageList(Long spuId);
+
+    /**
+     * 根据spuId 查询销售属性
+     * @param spuId spuId
+     *
+     * @return  List<SpuSaleAttr>
+     */
+    List<SpuSaleAttr> getSpuSaleAttrList(Long spuId);
 }

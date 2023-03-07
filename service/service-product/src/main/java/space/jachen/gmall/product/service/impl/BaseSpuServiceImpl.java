@@ -97,4 +97,30 @@ public class BaseSpuServiceImpl extends ServiceImpl<SpuInfoMapper,SpuInfo> imple
         );
 
     }
+
+    @Override
+    public List<SpuSaleAttr> getSpuSaleAttrList(Long spuId) {
+        // 根据 spuId 查 SpuSaleAttr 表中的数据
+        List<SpuSaleAttr> spuSaleAttrList = spuSaleAttrMapper.selectList(
+                new LambdaQueryWrapper<SpuSaleAttr>() {{
+                    eq(SpuSaleAttr::getSpuId, spuId);
+                }}
+        );
+        // 在 spuSaleAttrList 根据 base_sale_attr_id 查询
+        if ( !CollectionUtils.isEmpty(spuSaleAttrList)){
+            spuSaleAttrList.forEach(spuSaleAttr -> {
+                List<SpuSaleAttrValue> spuSaleAttrValues = spuSaleAttrValueMapper.selectList(
+                                // 关联 getBaseSaleAttrId 和 getSpuId 查询
+                                new LambdaQueryWrapper<SpuSaleAttrValue>() {{
+                                    eq(SpuSaleAttrValue::getBaseSaleAttrId, spuSaleAttr.getBaseSaleAttrId())
+                                            .eq(SpuSaleAttrValue::getSpuId, spuSaleAttr.getSpuId());
+                                }}
+                        );
+                // 设置 spuSaleAttrValues
+                spuSaleAttr.setSpuSaleAttrValueList(spuSaleAttrValues);
+                }
+            );
+        }
+        return spuSaleAttrList;
+    }
 }

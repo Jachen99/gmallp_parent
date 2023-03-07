@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.*;
 import space.jachen.gmall.common.result.Result;
 import space.jachen.gmall.domain.product.SkuInfo;
 import space.jachen.gmall.domain.product.SpuImage;
+import space.jachen.gmall.domain.product.SpuSaleAttr;
+import space.jachen.gmall.product.service.BaseSkuService;
 import space.jachen.gmall.product.service.BaseSpuService;
 
 import java.util.List;
@@ -22,12 +24,35 @@ public class SKuManageController {
 
     @Autowired
     private BaseSpuService baseSpuService;
+    @Autowired
+    private BaseSkuService baseSkuService;
 
 
+    /**
+     * 保存 skuInfo
+     * @param skuInfo  SkuInfo
+     *
+     * @return  ok
+     */
     @PostMapping("/saveSkuInfo")
     public Result<Object> saveSkuInfo(@RequestBody SkuInfo skuInfo){
+        baseSkuService.saveSkuInfo(skuInfo);
 
         return Result.ok();
+    }
+
+
+    /**
+     * 根据spuId 查询销售属性
+     * @param spuId spuId
+     *
+     * @return  List<SpuSaleAttr>
+     */
+    @GetMapping("/spuSaleAttrList/{spuId}")
+    public Result<List<SpuSaleAttr>> getSpuSaleAttrList(@PathVariable Long spuId){
+        List<SpuSaleAttr> spuSaleAttrList = baseSpuService.getSpuSaleAttrList(spuId);
+
+        return Result.ok(spuSaleAttrList);
     }
 
 
