@@ -1,6 +1,7 @@
 package space.jachen.gmall.product.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import space.jachen.gmall.domain.product.BaseAttrInfo;
 import space.jachen.gmall.domain.product.SkuInfo;
 
 import java.util.List;
@@ -42,4 +43,13 @@ public interface BaseSkuService {
      * @return List<SkuInfo>
      */
     List<SkuInfo> findSkuInfoBySkuIdList(Long skuId);
+
+    /**
+     * item商品详情接口
+     *      - 根据 skuId 获取平台属性数据
+     * @param skuId 商品唯一编号 skuId
+     *
+     * @return  List<BaseAttrInfo>
+     */
+    List<BaseAttrInfo> getAttrList(Long skuId);
 }

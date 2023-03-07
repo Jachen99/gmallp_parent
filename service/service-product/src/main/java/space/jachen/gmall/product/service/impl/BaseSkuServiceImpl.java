@@ -6,14 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import space.jachen.gmall.domain.base.BaseEntity;
-import space.jachen.gmall.domain.product.SkuAttrValue;
-import space.jachen.gmall.domain.product.SkuImage;
-import space.jachen.gmall.domain.product.SkuInfo;
-import space.jachen.gmall.domain.product.SkuSaleAttrValue;
-import space.jachen.gmall.product.mapper.SkuAttrValueMapper;
-import space.jachen.gmall.product.mapper.SkuImageMapper;
-import space.jachen.gmall.product.mapper.SkuInfoMapper;
-import space.jachen.gmall.product.mapper.SkuSaleAttrValueMapper;
+import space.jachen.gmall.domain.product.*;
+import space.jachen.gmall.product.mapper.*;
 import space.jachen.gmall.product.service.BaseSkuService;
 
 import java.util.List;
@@ -34,6 +28,8 @@ public class BaseSkuServiceImpl implements BaseSkuService {
     private SkuAttrValueMapper skuAttrValueMapper;
     @Autowired
     private SkuSaleAttrValueMapper skuSaleAttrValueMapper;
+    @Autowired
+    private BaseAttrInfoMapper baseAttrInfoMapper;
 
     @Override
     public void saveSkuInfo(SkuInfo skuInfo) {
@@ -139,6 +135,29 @@ public class BaseSkuServiceImpl implements BaseSkuService {
         }
 
         return skuInfoList;
+    }
+
+    @Override
+    public List<BaseAttrInfo> getAttrList(Long skuId) {
+        // 根据 skuId 获取 sku_info 表中的 三级分类id category3Id
+        List<SkuInfo> skuInfoList = skuInfoMapper.selectList(
+                new LambdaQueryWrapper<SkuInfo>() {{
+                    eq(BaseEntity::getId, skuId);
+                }}
+        );
+        if ( !CollectionUtils.isEmpty(skuInfoList) ){
+            for (SkuInfo skuInfo : skuInfoList) {
+                Long category3Id = skuInfo.getCategory3Id();
+                // 根据 category3Id 查找 平台属性基本表
+                return baseAttrInfoMapper.selectList(
+                        new LambdaQueryWrapper<BaseAttrInfo>() {{
+                            eq(BaseAttrInfo::getCategoryId, category3Id)
+                                    .orderByDesc(BaseAttrInfo::getId);
+                        }}
+                );
+            }
+        }
+        return null;
     }
 
 }
