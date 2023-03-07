@@ -7,8 +7,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import space.jachen.gmall.common.result.Result;
 import space.jachen.gmall.domain.product.BaseAttrInfo;
+import space.jachen.gmall.domain.product.BaseTrademark;
 import space.jachen.gmall.domain.product.SkuInfo;
+import space.jachen.gmall.domain.product.SpuSaleAttr;
 import space.jachen.gmall.product.service.BaseSkuService;
+import space.jachen.gmall.product.service.BaseSpuService;
+import space.jachen.gmall.product.service.BaseTrademarkService;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -27,6 +31,41 @@ public class ProductManagerApiController {
 
     @Autowired
     private BaseSkuService baseSkuService;
+    @Autowired
+    private BaseSpuService baseSpuService;
+    @Autowired
+    private BaseTrademarkService baseTrademarkService;
+
+
+    /**
+     * 根据品牌Id 获取品牌数据
+     * @param tmId 品牌Id
+     * @return  BaseTrademark
+     */
+    @GetMapping("/inner/getTrademark/{tmId}")
+    public Result<BaseTrademark> getTrademark(@PathVariable Long tmId){
+        BaseTrademark baseTrademarkResult = baseTrademarkService.getTrademark(tmId);
+
+        return Result.ok(baseTrademarkResult);
+    }
+
+
+
+
+    /**
+     * 根据spuId,skuId 获取销售属性数据
+     * @param skuId  商品唯一编号 skuId
+     * @param spuId  spuId
+     *
+     * @return  List<SpuSaleAttr>
+     */
+    @GetMapping("/getSpuSaleAttrListCheckBySku/{skuId}/{spuId}")
+    public Result<List<SpuSaleAttr>> getSpuSaleAttrListCheckBySku(@PathVariable Long skuId, @PathVariable Long spuId){
+        List<SpuSaleAttr> spuSaleAttrList = baseSpuService.getSpuSaleAttrListCheckBySku(skuId,spuId);
+
+        return Result.ok(spuSaleAttrList);
+    }
+
 
 
     /**

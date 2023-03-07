@@ -61,4 +61,5 @@ public interface BaseSkuService {
      * @return BigDecimal
      */
     BigDecimal getSkuPrice(Long skuId);
+
 }
