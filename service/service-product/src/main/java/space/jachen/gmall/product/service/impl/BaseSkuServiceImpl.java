@@ -106,8 +106,27 @@ public class BaseSkuServiceImpl implements BaseSkuService {
                     eq(BaseEntity::getId, skuId);
                 }}
         );
-        // 如果 SkuInfoList 存在 -- > 则为 skuInfoList 列表中的每个 SkuInfo 对象设置 skuSaleAttrValueList 属性
         if ( !CollectionUtils.isEmpty(skuInfoList) ){
+            // 封装 skuImageList
+            skuInfoList.forEach(skuInfo -> {
+                List<SkuImage> skuImages = skuImageMapper.selectList(
+                        new LambdaQueryWrapper<SkuImage>() {{
+                            eq(SkuImage::getSkuId, skuId);
+                        }}
+                );
+                skuInfo.setSkuImageList(skuImages);
+            });
+            // 封装 skuAttrValueList
+            skuInfoList.forEach(skuInfo -> {
+                List<SkuAttrValue> skuAttrValues = skuAttrValueMapper.selectList(
+                        new LambdaQueryWrapper<SkuAttrValue>() {{
+                            eq(SkuAttrValue::getSkuId, skuId);
+                        }}
+                );
+                skuInfo.setSkuAttrValueList(skuAttrValues);
+            });
+            // 封装 skuSaleAttrValueList
+            // 如果 SkuInfoList 存在 -- > 则为 skuInfoList 列表中的每个 SkuInfo 对象设置 skuSaleAttrValueList 属性
             Consumer<SkuInfo> skuInfoConsumer = skuInfo -> {
                 List<SkuSaleAttrValue> skuSaleAttrValues = skuSaleAttrValueMapper.selectList(
                         new LambdaQueryWrapper<SkuSaleAttrValue>() {{
