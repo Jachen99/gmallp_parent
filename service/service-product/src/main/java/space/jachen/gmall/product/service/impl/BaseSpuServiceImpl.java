@@ -86,4 +86,15 @@ public class BaseSpuServiceImpl extends ServiceImpl<SpuInfoMapper,SpuInfo> imple
             }
         }
     }
+
+    @Override
+    public List<SpuImage> getSpuImageList(Long spuId) {
+
+        return spuImageMapper.selectList(
+                new LambdaQueryWrapper<SpuImage>(){{
+                    eq(SpuImage::getSpuId,spuId);
+                }}
+        );
+
+    }
 }
