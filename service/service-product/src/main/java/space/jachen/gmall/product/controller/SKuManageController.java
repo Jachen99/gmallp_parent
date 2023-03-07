@@ -1,11 +1,9 @@
 package space.jachen.gmall.product.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import space.jachen.gmall.common.result.Result;
+import space.jachen.gmall.domain.product.SkuInfo;
 import space.jachen.gmall.domain.product.SpuImage;
 import space.jachen.gmall.product.service.BaseSpuService;
 
@@ -24,6 +22,15 @@ public class SKuManageController {
 
     @Autowired
     private BaseSpuService baseSpuService;
+
+
+    @PostMapping("/saveSkuInfo")
+    public Result<Object> saveSkuInfo(@RequestBody SkuInfo skuInfo){
+
+        return Result.ok();
+    }
+
+
 
     /**
      * 根据spuId 获取spuImage 集合
