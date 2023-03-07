@@ -42,4 +42,6 @@ public interface BaseSpuService extends IService<SpuInfo> {
      * @return  List<SpuSaleAttr>
      */
     List<SpuSaleAttr> getSpuSaleAttrList(Long spuId);
+
+    List<SpuSaleAttr> getSpuSaleAttrListCheckBySku(Long skuId, Long spuId);
 }

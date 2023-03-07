@@ -20,4 +20,5 @@ public interface BaseTrademarkService extends IService<BaseTrademark> {
      */
     IPage<BaseTrademark> getBaseTrademarkPage(IPage<BaseTrademark> baseTrademarkIPage);
 
+    BaseTrademark getTrademark(Long tmId);
 }

@@ -124,4 +124,9 @@ public class BaseSpuServiceImpl extends ServiceImpl<SpuInfoMapper,SpuInfo> imple
         }
         return spuSaleAttrList;
     }
+
+    @Override
+    public List<SpuSaleAttr> getSpuSaleAttrListCheckBySku(Long skuId, Long spuId) {
+        return null;
+    }
 }

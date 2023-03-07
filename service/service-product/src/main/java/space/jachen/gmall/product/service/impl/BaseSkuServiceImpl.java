@@ -187,4 +187,5 @@ public class BaseSkuServiceImpl implements BaseSkuService {
         return skuInfo.getPrice();
     }
 
+
 }
