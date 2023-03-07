@@ -109,7 +109,8 @@ public class BaseSpuServiceImpl extends ServiceImpl<SpuInfoMapper,SpuInfo> imple
         // 在 spuSaleAttrList 根据 base_sale_attr_id 查询
         if ( !CollectionUtils.isEmpty(spuSaleAttrList)){
             spuSaleAttrList.forEach(spuSaleAttr -> {
-                List<SpuSaleAttrValue> spuSaleAttrValues = spuSaleAttrValueMapper.selectList(
+                List<SpuSaleAttrValue> spuSaleAttrValues = spuSaleAttrValueMapper
+                        .selectList(
                                 // 关联 getBaseSaleAttrId 和 getSpuId 查询
                                 new LambdaQueryWrapper<SpuSaleAttrValue>() {{
                                     eq(SpuSaleAttrValue::getBaseSaleAttrId, spuSaleAttr.getBaseSaleAttrId())
