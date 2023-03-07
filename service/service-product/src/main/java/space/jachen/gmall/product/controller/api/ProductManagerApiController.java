@@ -35,8 +35,8 @@ public class ProductManagerApiController {
      * @return  List<BaseAttrInfo>
      */
     @GetMapping("/inner/getAttrList/{skuId}")
-    public Result<List<BaseAttrInfo>> getAttrList(@PathVariable Long skuId){
-        List<BaseAttrInfo> baseAttrInfoList = baseSkuService.getAttrList(skuId);
+    public Result<List<BaseAttrInfo>> getAttrListBySkuId(@PathVariable Long skuId){
+        List<BaseAttrInfo> baseAttrInfoList = baseSkuService.getAttrListBySkuId(skuId);
 
         return Result.ok(baseAttrInfoList);
     }
@@ -49,7 +49,7 @@ public class ProductManagerApiController {
      *
      * @return  List<SkuInfo>
      */
-    @GetMapping("/inner/getAttrList/{skuId}")
+    @GetMapping("/inner/getSkuInfo/{skuId}")
     public Result<List<SkuInfo>> findSkuInfoBySkuIdList(@PathVariable Long skuId){
         List<SkuInfo> skuInfoList = baseSkuService.findSkuInfoBySkuIdList(skuId);
 

@@ -30,6 +30,8 @@ public class BaseSkuServiceImpl implements BaseSkuService {
     private SkuSaleAttrValueMapper skuSaleAttrValueMapper;
     @Autowired
     private BaseAttrInfoMapper baseAttrInfoMapper;
+    @Autowired
+    private BaseAttrValueMapper baseAttrValueMapper;
 
     @Override
     public void saveSkuInfo(SkuInfo skuInfo) {
@@ -138,7 +140,7 @@ public class BaseSkuServiceImpl implements BaseSkuService {
     }
 
     @Override
-    public List<BaseAttrInfo> getAttrList(Long skuId) {
+    public List<BaseAttrInfo> getAttrListBySkuId(Long skuId) {
         // 根据 skuId 获取 sku_info 表中的 三级分类id category3Id
         List<SkuInfo> skuInfoList = skuInfoMapper.selectList(
                 new LambdaQueryWrapper<SkuInfo>() {{
@@ -149,12 +151,26 @@ public class BaseSkuServiceImpl implements BaseSkuService {
             for (SkuInfo skuInfo : skuInfoList) {
                 Long category3Id = skuInfo.getCategory3Id();
                 // 根据 category3Id 查找 平台属性基本表
-                return baseAttrInfoMapper.selectList(
+                List<BaseAttrInfo> baseAttrInfoList = baseAttrInfoMapper.selectList(
                         new LambdaQueryWrapper<BaseAttrInfo>() {{
                             eq(BaseAttrInfo::getCategoryId, category3Id)
                                     .orderByDesc(BaseAttrInfo::getId);
                         }}
                 );
+                // 获取 attrValueList 并存入 baseAttrInfoList 集合返回
+                if ( !CollectionUtils.isEmpty(baseAttrInfoList) ){
+                    for (BaseAttrInfo attrInfo : baseAttrInfoList) {
+                        // 获取 平台属性id
+                        Long attrInfoId = attrInfo.getId();
+                        List<BaseAttrValue> baseAttrValueList = baseAttrValueMapper.selectList(
+                                new LambdaQueryWrapper<BaseAttrValue>() {{
+                                    eq(BaseAttrValue::getAttrId, attrInfoId);
+                                }}
+                        );
+                        attrInfo.setAttrValueList(baseAttrValueList);
+                    }
+                }
+                return baseAttrInfoList;
             }
         }
         return null;

@@ -51,5 +51,5 @@ public interface BaseSkuService {
      *
      * @return  List<BaseAttrInfo>
      */
-    List<BaseAttrInfo> getAttrList(Long skuId);
+    List<BaseAttrInfo> getAttrListBySkuId(Long skuId);
 }
