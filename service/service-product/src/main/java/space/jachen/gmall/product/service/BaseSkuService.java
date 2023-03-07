@@ -1,5 +1,6 @@
 package space.jachen.gmall.product.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import space.jachen.gmall.domain.product.SkuInfo;
 
 /**
@@ -12,4 +13,11 @@ public interface BaseSkuService {
      * @param skuInfo  SkuInfo
      */
     void saveSkuInfo(SkuInfo skuInfo);
+
+    /**
+     * sku分页列表
+     *
+     * @return IPage<SkuInfo>
+     */
+    IPage<SkuInfo> getSkuListPage(IPage<SkuInfo> skuInfoIPage);
 }

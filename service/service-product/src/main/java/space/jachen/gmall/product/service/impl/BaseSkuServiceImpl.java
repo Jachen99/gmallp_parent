@@ -1,5 +1,6 @@
 package space.jachen.gmall.product.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -66,5 +67,11 @@ public class BaseSkuServiceImpl implements BaseSkuService {
                 skuSaleAttrValueMapper.insert(skuSaleAttrValue);
             });
         }
+    }
+
+    @Override
+    public IPage<SkuInfo> getSkuListPage(IPage<SkuInfo> skuInfoIPage) {
+
+        return skuInfoMapper.selectPage(skuInfoIPage,null);
     }
 }

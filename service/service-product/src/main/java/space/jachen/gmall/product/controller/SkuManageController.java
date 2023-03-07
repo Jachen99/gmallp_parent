@@ -1,5 +1,7 @@
 package space.jachen.gmall.product.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import space.jachen.gmall.common.result.Result;
@@ -26,6 +28,23 @@ public class SkuManageController {
     private BaseSpuService baseSpuService;
     @Autowired
     private BaseSkuService baseSkuService;
+
+
+    /**
+     * sku分页列表
+     * @param page  当前页
+     * @param limit  每页条数
+     *
+     * @return IPage<SkuInfo>
+     */
+    @GetMapping("/list/{page}/{limit}")
+    public Result<IPage<SkuInfo>> getSkuListPage(@PathVariable Long page, @PathVariable Long limit){
+        // 封装分页对象
+        IPage<SkuInfo> skuInfoIPage = new Page<>(page,limit);
+        skuInfoIPage = baseSkuService.getSkuListPage(skuInfoIPage);
+
+        return Result.ok(skuInfoIPage);
+    }
 
 
     /**
