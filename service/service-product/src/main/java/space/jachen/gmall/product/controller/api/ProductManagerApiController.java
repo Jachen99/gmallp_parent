@@ -114,9 +114,9 @@ public class ProductManagerApiController {
      * @return  List<SkuInfo>
      */
     @GetMapping("/inner/getSkuInfo/{skuId}")
-    public Result<List<SkuInfo>> findSkuInfoBySkuIdList(@PathVariable Long skuId){
-        List<SkuInfo> skuInfoList = baseSkuService.findSkuInfoBySkuIdList(skuId);
+    public SkuInfo findSkuInfoBySkuId(@PathVariable Long skuId){
+        SkuInfo skuInfo = baseSkuService.findSkuInfoBySkuId(skuId);
 
-        return Result.ok(skuInfoList);
+        return skuInfo;
     }
 }

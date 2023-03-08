@@ -12,7 +12,6 @@ import space.jachen.gmall.product.service.BaseSkuService;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * @author JaChen
@@ -98,48 +97,24 @@ public class BaseSkuServiceImpl implements BaseSkuService {
     }
 
     @Override
-    public List<SkuInfo> findSkuInfoBySkuIdList(Long skuId) {
+    public SkuInfo findSkuInfoBySkuId(Long skuId) {
 
-        // 这里逻辑不对  应该返回单个对象  不是list  不想改了。。。
-        // 查找 SkuInfoList
-        List<SkuInfo> skuInfoList = skuInfoMapper.selectList(
+        // 查找 SkuInfo
+        SkuInfo skuInfo = skuInfoMapper.selectOne(
                 new LambdaQueryWrapper<SkuInfo>() {{
                     eq(BaseEntity::getId, skuId);
                 }}
         );
-        if ( !CollectionUtils.isEmpty(skuInfoList) ){
-            // 封装 skuImageList
-            skuInfoList.forEach(skuInfo -> {
-                List<SkuImage> skuImages = skuImageMapper.selectList(
-                        new LambdaQueryWrapper<SkuImage>() {{
-                            eq(SkuImage::getSkuId, skuId);
-                        }}
-                );
-                skuInfo.setSkuImageList(skuImages);
-            });
-            // 封装 skuAttrValueList
-            skuInfoList.forEach(skuInfo -> {
-                List<SkuAttrValue> skuAttrValues = skuAttrValueMapper.selectList(
-                        new LambdaQueryWrapper<SkuAttrValue>() {{
-                            eq(SkuAttrValue::getSkuId, skuId);
-                        }}
-                );
-                skuInfo.setSkuAttrValueList(skuAttrValues);
-            });
-            // 封装 skuSaleAttrValueList
-            // 如果 SkuInfoList 存在 -- > 则为 skuInfoList 列表中的每个 SkuInfo 对象设置 skuSaleAttrValueList 属性
-            Consumer<SkuInfo> skuInfoConsumer = skuInfo -> {
-                List<SkuSaleAttrValue> skuSaleAttrValues = skuSaleAttrValueMapper.selectList(
-                        new LambdaQueryWrapper<SkuSaleAttrValue>() {{
-                            eq(SkuSaleAttrValue::getSkuId, skuId);
-                        }}
-                );
-                skuInfo.setSkuSaleAttrValueList(skuSaleAttrValues);
-            };
-            skuInfoList.forEach(skuInfoConsumer);
+        if (skuInfo != null){
+            List<SkuImage> skuImageList = skuImageMapper.selectList(
+                    new LambdaQueryWrapper<SkuImage>() {{
+                        eq(SkuImage::getSkuId, skuInfo.getId());
+                    }}
+            );
+            skuInfo.setSkuImageList(skuImageList);
         }
 
-        return skuInfoList;
+        return skuInfo;
     }
 
     @Override
@@ -184,7 +159,10 @@ public class BaseSkuServiceImpl implements BaseSkuService {
                     eq(BaseEntity::getId, skuId);
                 }}
         );
-        return skuInfo.getPrice();
+        if ( skuInfo != null){
+            return skuInfo.getPrice();
+        }
+        return new BigDecimal(0);
     }
 
 

@@ -39,11 +39,11 @@ public interface BaseSkuService {
 
     /**
      * item商品详情接口
-     *   - 根据 skuId 列表查询到 skuInfo 信息集合
+     *   - 根据 skuId 列表查询到 skuInfo 信息
      * @param skuId  商品唯一编号 skuId
-     * @return List<SkuInfo>
+     * @return SkuInfo
      */
-    List<SkuInfo> findSkuInfoBySkuIdList(Long skuId);
+    SkuInfo findSkuInfoBySkuId(Long skuId);
 
     /**
      * item商品详情接口
