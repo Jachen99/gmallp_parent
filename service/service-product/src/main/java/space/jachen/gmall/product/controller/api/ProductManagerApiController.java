@@ -4,10 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import space.jachen.gmall.common.result.Result;
 import space.jachen.gmall.domain.base.BaseCategoryView;
-import space.jachen.gmall.domain.product.BaseAttrInfo;
-import space.jachen.gmall.domain.product.BaseTrademark;
-import space.jachen.gmall.domain.product.SkuInfo;
-import space.jachen.gmall.domain.product.SpuSaleAttr;
+import space.jachen.gmall.domain.product.*;
 import space.jachen.gmall.product.service.BaseCategoryService;
 import space.jachen.gmall.product.service.BaseSkuService;
 import space.jachen.gmall.product.service.BaseSpuService;
@@ -36,6 +33,20 @@ public class ProductManagerApiController {
     private BaseTrademarkService baseTrademarkService;
     @Autowired
     private BaseCategoryService baseCategoryService;
+
+
+    /**
+     * 根据spuId 获取海报数据
+     * @param spuId spuId
+     * @return List<SpuPoster>
+     */
+    @GetMapping("/inner/findSpuPosterBySpuId/{spuId}")
+    public List<SpuPoster> findSpuPosterBySpuId(@PathVariable Long spuId){
+
+        return baseSpuService.findSpuPosterBySpuId(spuId);
+    }
+
+
 
 
     /**
@@ -119,8 +130,7 @@ public class ProductManagerApiController {
      */
     @GetMapping("/inner/getSkuInfo/{skuId}")
     public SkuInfo findSkuInfoBySkuId(@PathVariable Long skuId){
-        SkuInfo skuInfo = baseSkuService.findSkuInfoBySkuId(skuId);
 
-        return skuInfo;
+       return baseSkuService.findSkuInfoBySkuId(skuId);
     }
 }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import space.jachen.gmall.domain.product.SpuImage;
 import space.jachen.gmall.domain.product.SpuInfo;
+import space.jachen.gmall.domain.product.SpuPoster;
 import space.jachen.gmall.domain.product.SpuSaleAttr;
 
 import java.util.List;
@@ -44,4 +45,6 @@ public interface BaseSpuService extends IService<SpuInfo> {
     List<SpuSaleAttr> getSpuSaleAttrList(Long spuId);
 
     List<SpuSaleAttr> getSpuSaleAttrListCheckBySku(Long skuId, Long spuId);
+
+    List<SpuPoster> findSpuPosterBySpuId(Long spuId);
 }

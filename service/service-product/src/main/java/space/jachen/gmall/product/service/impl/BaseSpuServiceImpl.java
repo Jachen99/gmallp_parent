@@ -129,4 +129,13 @@ public class BaseSpuServiceImpl extends ServiceImpl<SpuInfoMapper,SpuInfo> imple
     public List<SpuSaleAttr> getSpuSaleAttrListCheckBySku(Long skuId, Long spuId) {
         return null;
     }
+
+    @Override
+    public List<SpuPoster> findSpuPosterBySpuId(Long spuId) {
+        return spuPosterMapper.selectList(
+                new LambdaQueryWrapper<SpuPoster>(){{
+                    eq(SpuPoster::getSpuId,spuId);
+                }}
+        );
+    }
 }
