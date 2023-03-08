@@ -6,9 +6,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import space.jachen.gmall.domain.product.BaseCategory3;
+import space.jachen.gmall.domain.product.BaseCategoryTrademark;
 import space.jachen.gmall.domain.product.BaseTrademark;
 import space.jachen.gmall.domain.product.CategoryTrademarkVo;
 import space.jachen.gmall.product.mapper.BaseCategory3Mapper;
+import space.jachen.gmall.product.mapper.BaseCategoryTrademarkMapper;
 import space.jachen.gmall.product.mapper.BaseTrademarkMapper;
 import space.jachen.gmall.product.service.BaseTrademarkService;
 
@@ -25,6 +27,8 @@ public class BaseTrademarkServiceImpl extends ServiceImpl<BaseTrademarkMapper, B
 
     @Autowired
     private BaseCategory3Mapper baseCategory3Mapper;
+    @Autowired
+    private BaseCategoryTrademarkMapper baseCategoryTrademarkMapper;
 
     @Override
     public IPage<BaseTrademark> getBaseTrademarkPage(IPage<BaseTrademark> baseTrademarkIPage) {
@@ -42,11 +46,22 @@ public class BaseTrademarkServiceImpl extends ServiceImpl<BaseTrademarkMapper, B
 
     @Override
     public List<BaseCategory3> findBaseCategory3ByCategory3IdList(CategoryTrademarkVo categoryTrademarkVo) {
-        if ( null != categoryTrademarkVo){
+        // 判空
+        if ( null != categoryTrademarkVo ){
+            // 获取 category3Id
+            Long category3Id = categoryTrademarkVo.getCategory3Id();
+            // 根据 category3Id 关联查询出 trademarkList
+            List<BaseCategoryTrademark> trademarkList = baseCategoryTrademarkMapper.selectList(
+                    new LambdaQueryWrapper<BaseCategoryTrademark>() {{
+                        eq(BaseCategoryTrademark::getCategory3Id, category3Id);
+                    }}
+            );
+
             // 查询idList
             List<Long> idList = categoryTrademarkVo.getTrademarkIdList();
 
-            return baseCategory3Mapper.selectBatchIds(idList);
+            // TODO: 未完。。
+            // return baseMapper.selectBatchIds(idList);
         }
         return null;
     }

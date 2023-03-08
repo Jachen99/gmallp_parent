@@ -38,7 +38,8 @@ public class ProductManagerApiController {
      */
     @PostMapping("/inner/findBaseCategory3ByCategory3IdList")
     public Result<List<BaseCategory3>> findBaseCategory3ByCategory3IdList(@RequestBody CategoryTrademarkVo categoryTrademarkVo){
-        List<BaseCategory3> baseCategory3List = baseTrademarkService.findBaseCategory3ByCategory3IdList(categoryTrademarkVo);
+        List<BaseCategory3> baseCategory3List = baseTrademarkService
+                .findBaseCategory3ByCategory3IdList(categoryTrademarkVo);
 
         return Result.ok(baseCategory3List);
     }
