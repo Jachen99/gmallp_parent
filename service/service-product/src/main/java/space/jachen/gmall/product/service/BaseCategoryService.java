@@ -1,6 +1,6 @@
 package space.jachen.gmall.product.service;
 
-import space.jachen.gmall.domain.product.BaseAttrInfo;
+import space.jachen.gmall.domain.base.BaseCategoryView;
 import space.jachen.gmall.domain.product.BaseCategory1;
 import space.jachen.gmall.domain.product.BaseCategory2;
 import space.jachen.gmall.domain.product.BaseCategory3;
@@ -38,4 +38,10 @@ public interface BaseCategoryService {
      */
     List<BaseCategory3> getCategory3(Long category2Id);
 
+    /**
+     * 根据三级分类id获取分类信息
+     * @param category3Id  三级分类编号
+     * @return BaseCategoryView
+     */
+    BaseCategoryView getCategoryView(Long category3Id);
 }

@@ -13,7 +13,7 @@ import java.io.Serializable;
  *
  */
 @Data
-@TableName("base_category_view")
+@TableName("category_view")
 public class BaseCategoryView implements Serializable {
 	
 	private static final long serialVersionUID = 1L;

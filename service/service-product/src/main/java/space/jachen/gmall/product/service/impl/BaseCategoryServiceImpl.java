@@ -1,11 +1,13 @@
 package space.jachen.gmall.product.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import space.jachen.gmall.domain.base.BaseCategoryView;
 import space.jachen.gmall.domain.product.BaseCategory1;
 import space.jachen.gmall.domain.product.BaseCategory2;
 import space.jachen.gmall.domain.product.BaseCategory3;
 import space.jachen.gmall.product.mapper.BaseCategoryMapper;
-import org.springframework.stereotype.Service;
+import space.jachen.gmall.product.mapper.BaseCategoryViewMapper;
 import space.jachen.gmall.product.service.BaseCategoryService;
 
 import java.util.List;
@@ -23,6 +25,8 @@ public class BaseCategoryServiceImpl implements BaseCategoryService {
 
     @Autowired
     private BaseCategoryMapper baseCategoryMapper;
+    @Autowired
+    private BaseCategoryViewMapper baseCategoryViewMapper;
 
     @Override
     public List<BaseCategory1> getCategory1() {
@@ -37,5 +41,10 @@ public class BaseCategoryServiceImpl implements BaseCategoryService {
     @Override
     public List<BaseCategory3> getCategory3(Long category2Id) {
         return baseCategoryMapper.getCategory3(category2Id);
+    }
+
+    @Override
+    public BaseCategoryView getCategoryView(Long category3Id) {
+        return baseCategoryViewMapper.selectById(category3Id);
     }
 }
