@@ -54,7 +54,7 @@ public class ProductManagerApiController {
 
 
     /**
-     * 根据spuId,skuId 获取销售属性数据
+     * 根据 spuId,skuId 获取销售属性数据
      * @param skuId  商品唯一编号 skuId
      * @param spuId  spuId
      *
