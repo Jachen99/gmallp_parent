@@ -44,7 +44,19 @@ public interface BaseSpuService extends IService<SpuInfo> {
      */
     List<SpuSaleAttr> getSpuSaleAttrList(Long spuId);
 
+    /**
+     * 根据spuId,skuId 获取销售属性数据
+     * @param skuId  商品唯一编号 skuId
+     * @param spuId  spuId
+     *
+     * @return  List<SpuSaleAttr>
+     */
     List<SpuSaleAttr> getSpuSaleAttrListCheckBySku(Long skuId, Long spuId);
-
+    
+    /**
+     * 根据spuId 获取海报数据
+     * @param spuId spuId
+     * @return List<SpuPoster>
+     */
     List<SpuPoster> findSpuPosterBySpuId(Long spuId);
 }

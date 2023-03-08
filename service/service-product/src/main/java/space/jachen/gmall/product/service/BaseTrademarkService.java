@@ -20,6 +20,11 @@ public interface BaseTrademarkService extends IService<BaseTrademark> {
      */
     IPage<BaseTrademark> getBaseTrademarkPage(IPage<BaseTrademark> baseTrademarkIPage);
 
+    /**
+     * 根据品牌Id 获取品牌数据
+     * @param tmId 品牌Id
+     * @return  BaseTrademark
+     */
     BaseTrademark getTrademark(Long tmId);
 
 }

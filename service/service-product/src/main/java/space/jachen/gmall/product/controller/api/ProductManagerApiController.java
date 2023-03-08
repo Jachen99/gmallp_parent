@@ -11,7 +11,9 @@ import space.jachen.gmall.product.service.BaseSpuService;
 import space.jachen.gmall.product.service.BaseTrademarkService;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 前台 - 商品管理 控制器
@@ -24,7 +26,6 @@ import java.util.List;
 @RequestMapping("/api/product")
 public class ProductManagerApiController {
 
-
     @Autowired
     private BaseSkuService baseSkuService;
     @Autowired
@@ -33,6 +34,53 @@ public class ProductManagerApiController {
     private BaseTrademarkService baseTrademarkService;
     @Autowired
     private BaseCategoryService baseCategoryService;
+
+
+    /**
+     * TODO：
+     * 根据spuId 获取到 销售属性值Id 与 skuId 组成的数据集
+     * @param spuId  spuId
+     * @return Map
+     */
+    @GetMapping("/inner/getSkuValueIdsMap/{spuId}")
+    public Map<String,Object> getSkuValueIdsMap(@PathVariable Long spuId){
+
+        Map<String,Object> mapList = baseSkuService.getSkuValueIdsMap(spuId);
+        Map<String,Object> result = new HashMap<>();
+        result.put("",mapList);
+        return result;
+    }
+
+
+
+    /**
+     * 根据spuId,skuId 获取销售属性数据
+     * @param skuId  商品唯一编号 skuId
+     * @param spuId  spuId
+     *
+     * @return  List<SpuSaleAttr>
+     */
+    @GetMapping("/inner/getSpuSaleAttrListCheckBySku/{skuId}/{spuId}")
+    public List<SpuSaleAttr> getSpuSaleAttrListCheckBySku(
+            @PathVariable Long skuId, @PathVariable Long spuId){
+
+        return baseSpuService.getSpuSaleAttrListCheckBySku(skuId,spuId);
+    }
+
+
+
+    /**
+     * 根据 skuId 获取平台属性数据
+     * @param skuId 商品唯一编号 skuId
+     *
+     * @return  List<BaseAttrInfo>
+     */
+    @GetMapping("/inner/getAttrList/{skuId}")
+    public List<BaseAttrInfo> getAttrListBySkuId(@PathVariable Long skuId){
+
+        return baseSkuService.getAttrListBySkuId(skuId);
+    }
+
 
 
     /**
@@ -45,7 +93,6 @@ public class ProductManagerApiController {
 
         return baseSpuService.findSpuPosterBySpuId(spuId);
     }
-
 
 
 
@@ -77,22 +124,6 @@ public class ProductManagerApiController {
 
 
     /**
-     * 根据spuId,skuId 获取销售属性数据
-     * @param skuId  商品唯一编号 skuId
-     * @param spuId  spuId
-     *
-     * @return  List<SpuSaleAttr>
-     */
-    @GetMapping("/getSpuSaleAttrListCheckBySku/{skuId}/{spuId}")
-    public Result<List<SpuSaleAttr>> getSpuSaleAttrListCheckBySku(@PathVariable Long skuId, @PathVariable Long spuId){
-        List<SpuSaleAttr> spuSaleAttrList = baseSpuService.getSpuSaleAttrListCheckBySku(skuId,spuId);
-
-        return Result.ok(spuSaleAttrList);
-    }
-
-
-
-    /**
      * 根据skuId 获取最新的商品价格
      * @param skuId  商品唯一编号 skuId
      *
@@ -102,22 +133,6 @@ public class ProductManagerApiController {
     public BigDecimal getSkuPrice(@PathVariable Long skuId){
 
         return baseSkuService.getSkuPrice(skuId);
-    }
-
-
-
-
-    /**
-     * 根据 skuId 获取平台属性数据
-     * @param skuId 商品唯一编号 skuId
-     *
-     * @return  List<BaseAttrInfo>
-     */
-    @GetMapping("/inner/getAttrList/{skuId}")
-    public Result<List<BaseAttrInfo>> getAttrListBySkuId(@PathVariable Long skuId){
-        List<BaseAttrInfo> baseAttrInfoList = baseSkuService.getAttrListBySkuId(skuId);
-
-        return Result.ok(baseAttrInfoList);
     }
 
 

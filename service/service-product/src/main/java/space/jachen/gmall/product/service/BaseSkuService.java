@@ -6,12 +6,14 @@ import space.jachen.gmall.domain.product.SkuInfo;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author JaChen
  * @date 2023/3/7 11:15
  */
 public interface BaseSkuService {
+
     /**
      * 保存 skuInfo
      * @param skuInfo  SkuInfo
@@ -61,5 +63,12 @@ public interface BaseSkuService {
      * @return BigDecimal
      */
     BigDecimal getSkuPrice(Long skuId);
+
+    /**
+     * 根据spuId 获取到销售属性值Id 与skuId 组成的数据集
+     * @param spuId  spuId
+     * @return Map
+     */
+    Map<String,Object> getSkuValueIdsMap(Long spuId);
 
 }

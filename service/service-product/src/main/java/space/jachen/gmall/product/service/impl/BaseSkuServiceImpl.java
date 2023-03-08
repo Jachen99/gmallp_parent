@@ -11,7 +11,9 @@ import space.jachen.gmall.product.mapper.*;
 import space.jachen.gmall.product.service.BaseSkuService;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author JaChen
@@ -117,39 +119,65 @@ public class BaseSkuServiceImpl implements BaseSkuService {
         return skuInfo;
     }
 
+    /**
+     * item商品详情接口 - 根据 skuId 获取平台属性数据
+     * -----------------------------------------
+     * #根据表 sku_attr_value 关联 base_attr_info、base_attr_value 进行查询
+     * SELECT
+     *     bai.id,
+     *     bai.attr_name,
+     *     bai.category_id,
+     *     bai.category_level,
+     *     bav.id attr_value_id,
+     *     bav.value_name,
+     *     bav.attr_id
+     * FROM
+     *     base_attr_info bai
+     *         INNER JOIN base_attr_value bav ON bai.id = bav.attr_id
+     *         INNER JOIN sku_attr_value sav ON sav.value_id = bav.id
+     * WHERE
+     *         sav.sku_id = 23
+     * @param skuId 商品唯一编号 skuId
+     * ----------------------------------------------------------------
+     * @return   List<BaseAttrInfo>
+     */
     @Override
     public List<BaseAttrInfo> getAttrListBySkuId(Long skuId) {
-        // 根据 skuId 获取 sku_info 表中的 三级分类id category3Id
-        SkuInfo info = skuInfoMapper.selectOne(
-                new LambdaQueryWrapper<SkuInfo>() {{
-                    eq(BaseEntity::getId, skuId);
+        // 1、创建封装结果集
+        List<BaseAttrInfo> resultList = new ArrayList<>();
+        // 2、根据 skuId 获取 skuAttrValueList 集合
+        List<SkuAttrValue> skuAttrValueList = skuAttrValueMapper.selectList(
+                new LambdaQueryWrapper<SkuAttrValue>() {{
+                    eq(SkuAttrValue::getSkuId, skuId);
                 }}
         );
-        if ( null != info ){
-            Long category3Id = info.getCategory3Id();
-            // 根据 category3Id 查找 平台属性基本表
-            List<BaseAttrInfo> baseAttrInfoList = baseAttrInfoMapper.selectList(
-                    new LambdaQueryWrapper<BaseAttrInfo>() {{
-                        eq(BaseAttrInfo::getCategoryId, category3Id)
-                                .orderByDesc(BaseAttrInfo::getId);
-                    }}
-            );
-            // 获取 attrValueList 并存入 baseAttrInfoList 集合返回
-            if ( !CollectionUtils.isEmpty(baseAttrInfoList) ){
-                for (BaseAttrInfo attrInfo : baseAttrInfoList) {
-                    // 获取 平台属性id
-                    Long attrInfoId = attrInfo.getId();
-                    List<BaseAttrValue> baseAttrValueList = baseAttrValueMapper.selectList(
-                            new LambdaQueryWrapper<BaseAttrValue>() {{
-                                eq(BaseAttrValue::getAttrId, attrInfoId);
-                            }}
-                    );
-                    attrInfo.setAttrValueList(baseAttrValueList);
-                }
-            }
-            return baseAttrInfoList;
-        }
-        return null;
+        // 3、获取 BaseAttrInfo 数据集合
+        skuAttrValueList.forEach(skuAttrValue -> {
+            // 创建结果集中的valueList
+            List<BaseAttrValue> valueList = new ArrayList<>();
+            // 获取集合中的attr_id
+            Long attrId = skuAttrValue.getAttrId();
+            // 获取集合中的 value_id
+            Long valueId = skuAttrValue.getValueId();
+            // 封装查询条件 sku_attr_value.attr_id = base_attr_info.id
+            LambdaQueryWrapper<BaseAttrInfo> attrWrapper = new LambdaQueryWrapper<BaseAttrInfo>() {{
+                eq(BaseEntity::getId, attrId);
+            }};
+            // 封装查询条件 sku_attr_value.value_id = base_attr_value.id
+            LambdaQueryWrapper<BaseAttrValue> valueWrapper = new LambdaQueryWrapper<BaseAttrValue>() {{
+                eq(BaseEntity::getId, valueId);
+            }};
+            // 获取 BaseAttrInfo
+            BaseAttrInfo attrInfo = baseAttrInfoMapper.selectOne(attrWrapper);
+            // 获取 BaseAttrValue
+            BaseAttrValue baseAttrValue = baseAttrValueMapper.selectOne(valueWrapper);
+            // 4、封装结果集
+            valueList.add(baseAttrValue);
+            attrInfo.setAttrValueList(valueList);
+            resultList.add(attrInfo);
+        });
+
+        return resultList;
     }
 
     @Override
@@ -163,6 +191,15 @@ public class BaseSkuServiceImpl implements BaseSkuService {
             return skuInfo.getPrice();
         }
         return new BigDecimal(0);
+    }
+
+    @Override
+    public Map<String,Object> getSkuValueIdsMap(Long spuId) {
+        // 根据 spuId 获取到销售属性值Id 与 skuId 组成的数据集
+
+
+
+        return null;
     }
 
 

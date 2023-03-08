@@ -127,6 +127,10 @@ public class BaseSpuServiceImpl extends ServiceImpl<SpuInfoMapper,SpuInfo> imple
 
     @Override
     public List<SpuSaleAttr> getSpuSaleAttrListCheckBySku(Long skuId, Long spuId) {
+        // 根据 spuId 和 base_attr_value_id 查询销售属性信息
+
+
+        // 勾选当前 skuInfo 配置的属性
         return null;
     }
 
