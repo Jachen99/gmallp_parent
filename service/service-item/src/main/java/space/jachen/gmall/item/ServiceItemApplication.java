@@ -3,6 +3,7 @@ package space.jachen.gmall.item;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 
 /**
@@ -13,6 +14,8 @@ import org.springframework.context.annotation.ComponentScan;
  */
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
 @ComponentScan(basePackages = "space.jachen.gmall")
+// 需要指定feign接口需要扫描的包路径
+@EnableFeignClients(basePackages = "space.jachen.gmall")
 public class ServiceItemApplication  {
     public static void main(String[] args) {
 
