@@ -1,11 +1,12 @@
 {
   "outPath": "target/doc",
+  "serverUrl": "http://localhost:8206",
   "projectName": "service-product项目",
   "packageFilters": "space.jachen.gmall.product.controller.*",
   "openUrl": "http://jachen.com:7700/api",
   "appToken": "a8c66914a4254c4a9221c8e5bb6d46bd",
   "debugEnvName":"本地环境",
-  "debugEnvUrl":"http://localhost:80",
-  "tornaDebug": true,
+  "debugEnvUrl":"http://localhost:8206",
+  "tornaDebug": false,
   "replace": true
 }

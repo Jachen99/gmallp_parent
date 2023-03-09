@@ -156,16 +156,17 @@ public class BaseSpuServiceImpl extends ServiceImpl<SpuInfoMapper,SpuInfo> imple
         }};
         List<SpuSaleAttr> spuSaleAttrs = spuSaleAttrMapper.selectList(attrWrapper);
         spuSaleAttrs.forEach(spuSaleAttr -> {
-            // 2、根据 spuId 获取销售属性值集合
+            // 2、创建 返回结果集中的子结果集 spuSaleValueList 存放 spuSaleAttrValue 结果集
+            List<SpuSaleAttrValue> spuSaleValueList = new ArrayList<>();
+
+            // 3、根据 spuId 获取销售属性值集合
             LambdaQueryWrapper<SpuSaleAttrValue> valueWrapper = new LambdaQueryWrapper<SpuSaleAttrValue>() {{
                 eq(SpuSaleAttrValue::getSpuId, spuId);
             }};
             List<SpuSaleAttrValue> spuSaleAttrValues = spuSaleAttrValueMapper.selectList(valueWrapper);
-            // 3、创建 返回结果集中的子结果集 spuSaleValueList 存放 spuSaleAttrValue 结果集
-            List<SpuSaleAttrValue> spuSaleValueList = new ArrayList<>();
-            spuSaleAttrValues.forEach(spuSaleAttrValue -> {
             /* 根据spu_sale_attr_value的id去sku_sale_attr_value找对应的sale_attr_value_id，
-            在sku_id = 传入的sku_id 条件下 对比 是否存在  如果不存在 checked 设为0 否则为1 */
+                在sku_id = 传入的sku_id 条件下 对比 是否存在  如果不存在 checked 设为0 否则为1 */
+            spuSaleAttrValues.forEach(spuSaleAttrValue -> {
                 // 4、根据 valueId 查询 spu_sale_attr_value 表
                 Long valueId = spuSaleAttrValue.getId();
                 LambdaQueryWrapper<SkuSaleAttrValue> valueIdWrapper = new LambdaQueryWrapper<SkuSaleAttrValue>() {{
@@ -180,12 +181,12 @@ public class BaseSpuServiceImpl extends ServiceImpl<SpuInfoMapper,SpuInfo> imple
                     }else {
                         spuSaleAttrValue.setIsChecked("0");
                     }
-                    spuSaleValueList.add(spuSaleAttrValue);
-                    // spuSaleAttr.setSaleAttrName(spuSaleAttrValue.getSaleAttrName());
                 });
+                // 保存 勾选属性 的信息
+                spuSaleValueList.add(spuSaleAttrValue);
+                // 6、封装 spuSaleAttrs
+                spuSaleAttr.setSpuSaleAttrValueList(spuSaleValueList);
             });
-            // 6、封装 spuSaleAttrs
-            spuSaleAttr.setSpuSaleAttrValueList(spuSaleValueList);
         });
         return spuSaleAttrs;
     }
