@@ -25,7 +25,7 @@ public class ItemApiController {
     /**
      * 获取详情页数据
      * @param skuId  skuId
-     * @return
+     * @return  Map<String,Object>
      */
     @GetMapping("/{skuId}")
     public Result<Map<String,Object>> getSkuId(@PathVariable Long skuId){

@@ -1,7 +1,9 @@
 package space.jachen.gmall.item.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import space.jachen.gmall.item.service.ItemService;
+import space.jachen.gmall.product.client.ProductFeignClient;
 
 import java.util.Map;
 
@@ -11,6 +13,12 @@ import java.util.Map;
  */
 @Service
 public class ItemServiceImpl implements ItemService {
+
+    @Autowired
+    private ProductFeignClient productFeignClient;
+
+
+
     @Override
     public Map<String, Object> getSkuId(Long skuId) {
         return null;

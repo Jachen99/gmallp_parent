@@ -12,6 +12,16 @@
     <packaging>jar</packaging>
     <artifactId>service-item</artifactId>
 
+    <dependencies>
+
+        <dependency>
+            <groupId>space.jachen</groupId>
+            <artifactId>service-product-client</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+
+    </dependencies>
+
     <build>
         <!-- 为了更改名称 -->
         <finalName>service-item</finalName>
