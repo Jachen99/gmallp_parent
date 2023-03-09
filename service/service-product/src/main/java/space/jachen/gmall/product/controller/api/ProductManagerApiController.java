@@ -37,8 +37,7 @@ public class ProductManagerApiController {
 
 
     /**
-     * TODO：
-     * 根据spuId 获取到 销售属性值Id 与 skuId 组成的数据集
+     * 根据spuId 获取到 销售属性值Id 与 skuId 组成的数据集  切换属性
      * @param spuId  spuId
      * @return Map
      */
@@ -47,14 +46,14 @@ public class ProductManagerApiController {
 
         Map<String,Object> mapList = baseSkuService.getSkuValueIdsMap(spuId);
         Map<String,Object> result = new HashMap<>();
-        result.put("",mapList);
+        result.put("value_ids",mapList);
         return result;
     }
 
 
 
     /**
-     * 根据 spuId,skuId 获取销售属性数据
+     * 根据 spuId,skuId 获取销售属性数据  勾选属性
      * @param skuId  商品唯一编号 skuId
      * @param spuId  spuId
      *

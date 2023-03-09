@@ -11,9 +11,8 @@ import space.jachen.gmall.product.mapper.*;
 import space.jachen.gmall.product.service.BaseSkuService;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author JaChen
@@ -193,13 +192,44 @@ public class BaseSkuServiceImpl implements BaseSkuService {
         return new BigDecimal(0);
     }
 
+    /**
+     * 根据 spuId 获取到销售属性值Id 与 skuId 组成的数据集
+     * @param spuId  spuId
+     * ------------------------------------------------
+     * SELECT sku_id  , GROUP_CONCAT(sale_attr_value_id  ORDER BY sp.base_sale_attr_id ASC SEPARATOR '|') value_ids
+     *      FROM  `sku_sale_attr_value` sv
+     *      INNER JOIN `spu_sale_attr_value` sp on sp.id = sv.sale_attr_value_id
+     *      WHERE sv.spu_id=#{spuId}
+     *      GROUP BY sku_id
+     * ----------------------------
+     * @return  Map<String,Object>
+     */
     @Override
     public Map<String,Object> getSkuValueIdsMap(Long spuId) {
-        // 根据 spuId 获取到销售属性值Id 与 skuId 组成的数据集
-
-
-
-        return null;
+        // 1、创建 结果集 Map
+        Map<String, Object> resultMap = new HashMap<>();
+        // 2、根据 spuId 获取 sku_sale_attr_value 表数据
+        LambdaQueryWrapper<SkuSaleAttrValue> spuIdWrapper = new LambdaQueryWrapper<SkuSaleAttrValue>() {{
+            eq(SkuSaleAttrValue::getSpuId, spuId);
+        }};
+        List<SkuSaleAttrValue> skuSaleAttrValues = skuSaleAttrValueMapper.selectList(spuIdWrapper);
+        // 3、获取去重的 sku_id
+        Set<Long> skuIds = skuSaleAttrValues.stream().map(SkuSaleAttrValue::getSkuId).collect(Collectors.toSet());
+        skuIds.forEach(skuId->{
+            LambdaQueryWrapper<SkuSaleAttrValue> skuIdWrapper = new LambdaQueryWrapper<SkuSaleAttrValue>() {{
+                eq(SkuSaleAttrValue::getSkuId, skuId);
+            }};
+            // 4、根据 skuId 查询
+            List<SkuSaleAttrValue> saleAttrValues = skuSaleAttrValueMapper.selectList(skuIdWrapper);
+            String collect = saleAttrValues.stream().map(skuSaleAttrValue -> {
+                        return skuSaleAttrValue.getSaleAttrValueId().toString();
+                    }).collect(Collectors.toList())
+                    .stream().distinct().collect(Collectors.joining("|"));
+            System.out.println("collect = " + collect);
+            // 5、封装map结果
+            resultMap.put(collect,skuId.toString());
+        });
+        return resultMap;
     }
 
 
