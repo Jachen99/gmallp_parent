@@ -14,12 +14,14 @@ import java.util.Map;
 @FeignClient(value ="service-item", fallback = ItemDegradeFeignClient.class)
 public interface ItemFeignClient {
 
+    public static final String BaseURL = "/api/item";
+
     /**
      * 获取详情页数据
      * @param skuId  skuId
      * @return  Map<String,Object>
      */
-    @GetMapping("/{skuId}")
+    @GetMapping(BaseURL+"/{skuId}")
     public Result<Map<String,Object>> getSkuId(@PathVariable Long skuId);
 
 }
