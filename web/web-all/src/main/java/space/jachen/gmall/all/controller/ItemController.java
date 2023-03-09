@@ -32,6 +32,6 @@ public class ItemController {
         Result<Map<String,Object>> result = itemFeignClient.getSkuId(skuId);
         model.addAllAttributes(result.getData());
 
-        return "item/index";
+        return "item/item";
     }
 }
