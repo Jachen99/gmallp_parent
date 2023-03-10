@@ -20,6 +20,7 @@ public class ItemController {
     @Resource
     private ItemFeignClient itemFeignClient;
 
+
     /**
      * sku详情页面
      * @param skuId  skuId

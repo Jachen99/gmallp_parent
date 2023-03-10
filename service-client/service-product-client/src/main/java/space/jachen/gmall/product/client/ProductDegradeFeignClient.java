@@ -19,7 +19,7 @@ import java.util.Map;
 public class ProductDegradeFeignClient implements ProductFeignClient{
 
     @Override
-    public Map<String, Object> getSkuValueIdsMap(Long spuId) {
+    public Map<String, String> getSkuValueIdsMap(Long spuId) {
         return null;
     }
 

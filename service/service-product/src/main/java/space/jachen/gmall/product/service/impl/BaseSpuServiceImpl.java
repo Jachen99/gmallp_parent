@@ -11,7 +11,6 @@ import space.jachen.gmall.domain.product.*;
 import space.jachen.gmall.product.mapper.*;
 import space.jachen.gmall.product.service.BaseSpuService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -148,7 +147,7 @@ public class BaseSpuServiceImpl extends ServiceImpl<SpuInfoMapper,SpuInfo> imple
      *
      * @return  List<SpuSaleAttr>
      */
-    @Override
+    /*@Override
     public List<SpuSaleAttr> getSpuSaleAttrListCheckBySku(Long skuId, Long spuId) {
         // 1、根据 spuId 查询销售属性集合
         LambdaQueryWrapper<SpuSaleAttr> attrWrapper = new LambdaQueryWrapper<SpuSaleAttr>() {{
@@ -164,8 +163,8 @@ public class BaseSpuServiceImpl extends ServiceImpl<SpuInfoMapper,SpuInfo> imple
                 eq(SpuSaleAttrValue::getSpuId, spuId);
             }};
             List<SpuSaleAttrValue> spuSaleAttrValues = spuSaleAttrValueMapper.selectList(valueWrapper);
-            /* 根据spu_sale_attr_value的id去sku_sale_attr_value找对应的sale_attr_value_id，
-                在sku_id = 传入的sku_id 条件下 对比 是否存在  如果不存在 checked 设为0 否则为1 */
+            *//* 根据spu_sale_attr_value的id去sku_sale_attr_value找对应的sale_attr_value_id，
+                在sku_id = 传入的sku_id 条件下 对比 是否存在  如果不存在 checked 设为0 否则为1 *//*
             spuSaleAttrValues.forEach(spuSaleAttrValue -> {
                 // 4、根据 valueId 查询 spu_sale_attr_value 表
                 Long valueId = spuSaleAttrValue.getId();
@@ -189,6 +188,14 @@ public class BaseSpuServiceImpl extends ServiceImpl<SpuInfoMapper,SpuInfo> imple
             });
         });
         return spuSaleAttrs;
+    }*/
+
+    // sql方式实现
+    @Override
+    public List<SpuSaleAttr> getSpuSaleAttrListCheckBySku(Long skuId, Long spuId){
+
+        return spuSaleAttrMapper.getSpuSaleAttrListCheckBySku(skuId,spuId);
+
     }
 
     @Override

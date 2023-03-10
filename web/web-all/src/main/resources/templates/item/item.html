@@ -50,13 +50,13 @@
             <div class="crumb-wrap">
                 <ul class="sui-breadcrumb">
                     <li>
-                        <a th:href="@{http://localhost:8300/list.html?category1Id={category1Id}(category1Id=${categoryView.category1Id})}" th:text="${categoryView.category1Name}">手机、数码、通讯</a>
+                        <a th:href="@{http://list.gmall.com/list.html?category1Id={category1Id}(category1Id=${categoryView.category1Id})}" th:text="${categoryView.category1Name}">手机、数码、通讯</a>
                     </li>
                     <li>
-                        <a th:href="@{http://localhost:8300/list.html?category2Id={category2Id}(category2Id=${categoryView.category2Id})}" th:text="${categoryView.category2Name}">手机</a>
+                        <a th:href="@{http://list.gmall.com/list.html?category2Id={category2Id}(category2Id=${categoryView.category2Id})}" th:text="${categoryView.category2Name}">手机</a>
                     </li>
                     <li>
-                        <a th:href="@{http://localhost:8300/list.html?category3Id={category3Id}(category3Id=${categoryView.category3Id})}" th:text="${categoryView.category3Name}">Apple苹果</a>
+                        <a th:href="@{http://list.gmall.com/list.html?category3Id={category3Id}(category3Id=${categoryView.category3Id})}" th:text="${categoryView.category3Name}">Apple苹果</a>
                     </li>
                     <li class="active" th:text="${skuInfo.skuName}">iphone 6S系类</li>
                 </ul>
@@ -1002,7 +1002,6 @@ var item = new Vue({
         },
 
         spuSaleAttrFun(index, spuSaleAttrValueId) {
-            debugger
             console.log('spuSaleAttrValueId:' + spuSaleAttrValueId)
             this.isAddCart = true
             //  JSON.parse() : Json 字符串转换为对象！ {"115|117":"44","114|117":"45"}

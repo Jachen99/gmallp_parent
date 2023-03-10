@@ -1,5 +1,6 @@
 package space.jachen.gmall.product.controller.api;
 
+import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import space.jachen.gmall.common.result.Result;
@@ -42,11 +43,11 @@ public class ProductManagerApiController {
      * @return Map
      */
     @GetMapping("/inner/getSkuValueIdsMap/{spuId}")
-    public Map<String,Object> getSkuValueIdsMap(@PathVariable Long spuId){
+    public Map<String,String> getSkuValueIdsMap(@PathVariable Long spuId){
 
         Map<String,Object> mapList = baseSkuService.getSkuValueIdsMap(spuId);
-        Map<String,Object> result = new HashMap<>();
-        result.put("value_ids",mapList);
+        Map<String,String> result = new HashMap<>();
+        result.put("value_ids", JSON.toJSONString(mapList));
         return result;
     }
 

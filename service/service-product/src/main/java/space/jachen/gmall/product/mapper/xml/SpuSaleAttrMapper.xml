@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="space.jachen.gmall.product.mapper.SpuSaleAttrMapper">
+
+    <resultMap id="baseAttrInfoMap" type="space.jachen.gmall.domain.product.SpuSaleAttr" autoMapping="true">
+        <!-- 设置主键
+             property：表示实体类的属性名
+             column：表示通过sql 执行以后查询出来的字段名 -->
+        <id property="id" column="id"/>
+        <collection property="spuSaleAttrValueList" ofType="space.jachen.gmall.domain.product.SpuSaleAttrValue" autoMapping="true">
+            <!-- 为重复的字段起别名 -->
+            <id property="id" column="sale_attr_value_id"/>
+        </collection>
+    </resultMap>
+
+    <select id="getSpuSaleAttrListCheckBySku" resultMap="baseAttrInfoMap">
+        SELECT
+            sa.id ,
+            sa.spu_id,
+            sa.sale_attr_name,
+            sa.base_sale_attr_id,
+            sv.id sale_attr_value_id,
+            sv.sale_attr_value_name,
+            skv.sku_id,
+            IF(skv.sku_id IS NULL,0,1)  is_checked
+        FROM spu_sale_attr sa
+        INNER JOIN spu_sale_attr_value  sv ON sa.spu_id=sv.spu_id AND sa.base_sale_attr_id=sv.base_sale_attr_id
+        LEFT JOIN sku_sale_attr_value skv ON skv.sale_attr_value_id= sv.id AND skv.sku_id=#{skuId}
+        WHERE sa.spu_id=#{spuId}
+        ORDER BY sv.base_sale_attr_id,sv.id
+
+    </select>
+
+
+</mapper>

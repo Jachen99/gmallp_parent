@@ -29,7 +29,7 @@ public interface ProductFeignClient {
      * @return Map
      */
     @GetMapping(BaseURL+"/inner/getSkuValueIdsMap/{spuId}")
-    public Map<String,Object> getSkuValueIdsMap(@PathVariable Long spuId);
+    public Map<String,String> getSkuValueIdsMap(@PathVariable Long spuId);
 
     /**
      * 根据 spuId,skuId 获取销售属性数据  勾选属性
