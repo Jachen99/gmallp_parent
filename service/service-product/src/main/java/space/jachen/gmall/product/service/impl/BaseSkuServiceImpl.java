@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import space.jachen.gmall.common.cache.GmallCache;
 import space.jachen.gmall.domain.base.BaseEntity;
 import space.jachen.gmall.domain.product.*;
 import space.jachen.gmall.product.mapper.*;
@@ -98,6 +99,7 @@ public class BaseSkuServiceImpl implements BaseSkuService {
     }
 
     @Override
+    @GmallCache(front = "skuInfo:")
     public SkuInfo findSkuInfoBySkuId(Long skuId) {
 
         // 查找 SkuInfo
@@ -141,6 +143,7 @@ public class BaseSkuServiceImpl implements BaseSkuService {
      * @return   List<BaseAttrInfo>
      */
     @Override
+    @GmallCache(front = "attrList:")
     public List<BaseAttrInfo> getAttrListBySkuId(Long skuId) {
         // 1、创建封装结果集
         List<BaseAttrInfo> resultList = new ArrayList<>();
@@ -205,6 +208,7 @@ public class BaseSkuServiceImpl implements BaseSkuService {
      * @return  Map<String,Object>
      */
     @Override
+    @GmallCache(front = "skuValueIds:")
     public Map<String,Object> getSkuValueIdsMap(Long spuId) {
         // 1、创建 结果集 Map
         Map<String, Object> resultMap = new HashMap<>();

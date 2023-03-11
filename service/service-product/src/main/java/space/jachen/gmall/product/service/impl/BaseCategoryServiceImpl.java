@@ -2,6 +2,7 @@ package space.jachen.gmall.product.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import space.jachen.gmall.common.cache.GmallCache;
 import space.jachen.gmall.domain.base.BaseCategoryView;
 import space.jachen.gmall.domain.product.BaseCategory1;
 import space.jachen.gmall.domain.product.BaseCategory2;
@@ -44,6 +45,7 @@ public class BaseCategoryServiceImpl implements BaseCategoryService {
     }
 
     @Override
+    @GmallCache(front = "baseCategoryView:")
     public BaseCategoryView getCategoryView(Long category3Id) {
         return baseCategoryViewMapper.selectById(category3Id);
     }

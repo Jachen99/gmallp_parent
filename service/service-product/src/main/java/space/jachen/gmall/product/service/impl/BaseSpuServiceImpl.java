@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import space.jachen.gmall.common.cache.GmallCache;
 import space.jachen.gmall.domain.product.*;
 import space.jachen.gmall.product.mapper.*;
 import space.jachen.gmall.product.service.BaseSpuService;
@@ -192,6 +193,7 @@ public class BaseSpuServiceImpl extends ServiceImpl<SpuInfoMapper,SpuInfo> imple
 
     // sql方式实现
     @Override
+    @GmallCache(front = "spuSaleAttrList:")
     public List<SpuSaleAttr> getSpuSaleAttrListCheckBySku(Long skuId, Long spuId){
 
         return spuSaleAttrMapper.getSpuSaleAttrListCheckBySku(skuId,spuId);
@@ -199,6 +201,7 @@ public class BaseSpuServiceImpl extends ServiceImpl<SpuInfoMapper,SpuInfo> imple
     }
 
     @Override
+    @GmallCache(front = "spuPoster:")
     public List<SpuPoster> findSpuPosterBySpuId(Long spuId) {
         return spuPosterMapper.selectList(
                 new LambdaQueryWrapper<SpuPoster>(){{
