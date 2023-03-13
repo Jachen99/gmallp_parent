@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Inherited
 @Documented
 public @interface GmallCache {
-    
+
     String front() default "value:";
 
     String next() default ":info";
