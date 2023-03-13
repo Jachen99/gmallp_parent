@@ -1,6 +1,8 @@
 package space.jachen.gmall.product.client;
 
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Component;
+import space.jachen.gmall.common.result.Result;
 import space.jachen.gmall.domain.base.BaseCategoryView;
 import space.jachen.gmall.domain.product.BaseAttrInfo;
 import space.jachen.gmall.domain.product.SkuInfo;
@@ -17,6 +19,11 @@ import java.util.Map;
  */
 @Component
 public class ProductDegradeFeignClient implements ProductFeignClient{
+
+    @Override
+    public Result<List<JSONObject>> getBaseCategoryList() {
+        return null;
+    }
 
     @Override
     public Map<String, String> getSkuValueIdsMap(Long spuId) {

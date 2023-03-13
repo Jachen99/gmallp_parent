@@ -1,9 +1,11 @@
 package space.jachen.gmall.product.client;
 
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import space.jachen.gmall.common.result.Result;
 import space.jachen.gmall.domain.base.BaseCategoryView;
 import space.jachen.gmall.domain.product.BaseAttrInfo;
 import space.jachen.gmall.domain.product.SkuInfo;
@@ -22,6 +24,14 @@ import java.util.Map;
 public interface ProductFeignClient {
 
     public static final String BaseURL = "/api/product";
+
+
+    /**
+     * 获取首页分类数据
+     * @return List<JSONObject>
+     */
+    @GetMapping(BaseURL+"/getBaseCategoryList")
+    public Result<List<JSONObject>> getBaseCategoryList();
 
     /**
      * 根据spuId 获取到 销售属性值Id 与 skuId 组成的数据集  切换属性

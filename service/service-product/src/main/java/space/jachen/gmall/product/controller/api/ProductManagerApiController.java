@@ -1,6 +1,7 @@
 package space.jachen.gmall.product.controller.api;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import space.jachen.gmall.common.result.Result;
@@ -25,6 +26,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/product")
+@SuppressWarnings("all")
 public class ProductManagerApiController {
 
     @Autowired
@@ -38,13 +40,23 @@ public class ProductManagerApiController {
 
 
     /**
+     * 获取首页分类数据
+     * @return List<JSONObject>
+     */
+    @GetMapping("/getBaseCategoryList")
+    public Result<List<JSONObject>> getBaseCategoryList(){
+        List<JSONObject> list = baseCategoryService.getBaseCategoryList();
+        return Result.ok(list);
+    }
+
+
+    /**
      * 根据spuId 获取到 销售属性值Id 与 skuId 组成的数据集  切换属性
      * @param spuId  spuId
      * @return Map
      */
     @GetMapping("/inner/getSkuValueIdsMap/{spuId}")
     public Map<String,String> getSkuValueIdsMap(@PathVariable Long spuId){
-
         Map<String,Object> mapList = baseSkuService.getSkuValueIdsMap(spuId);
         Map<String,String> result = new HashMap<>();
         result.put("value_ids", JSON.toJSONString(mapList));
@@ -63,7 +75,6 @@ public class ProductManagerApiController {
     @GetMapping("/inner/getSpuSaleAttrListCheckBySku/{skuId}/{spuId}")
     public List<SpuSaleAttr> getSpuSaleAttrListCheckBySku(
             @PathVariable Long skuId, @PathVariable Long spuId){
-
         return baseSpuService.getSpuSaleAttrListCheckBySku(skuId,spuId);
     }
 
@@ -77,7 +88,6 @@ public class ProductManagerApiController {
      */
     @GetMapping("/inner/getAttrList/{skuId}")
     public List<BaseAttrInfo> getAttrListBySkuId(@PathVariable Long skuId){
-
         return baseSkuService.getAttrListBySkuId(skuId);
     }
 
@@ -90,7 +100,6 @@ public class ProductManagerApiController {
      */
     @GetMapping("/inner/findSpuPosterBySpuId/{spuId}")
     public List<SpuPoster> findSpuPosterBySpuId(@PathVariable Long spuId){
-
         return baseSpuService.findSpuPosterBySpuId(spuId);
     }
 
@@ -103,7 +112,6 @@ public class ProductManagerApiController {
      */
     @PostMapping("/inner/getCategoryView/{category3Id}")
     public BaseCategoryView getCategoryView( @PathVariable Long category3Id){
-
         return baseCategoryService.getCategoryView(category3Id);
     }
 
@@ -117,7 +125,6 @@ public class ProductManagerApiController {
     @GetMapping("/inner/getTrademark/{tmId}")
     public Result<BaseTrademark> getTrademark(@PathVariable Long tmId){
         BaseTrademark baseTrademarkResult = baseTrademarkService.getTrademark(tmId);
-
         return Result.ok(baseTrademarkResult);
     }
 
@@ -131,7 +138,6 @@ public class ProductManagerApiController {
      */
     @GetMapping("/inner/getSkuPrice/{skuId}")
     public BigDecimal getSkuPrice(@PathVariable Long skuId){
-
         return baseSkuService.getSkuPrice(skuId);
     }
 
@@ -145,7 +151,6 @@ public class ProductManagerApiController {
      */
     @GetMapping("/inner/getSkuInfo/{skuId}")
     public SkuInfo findSkuInfoBySkuId(@PathVariable Long skuId){
-
        return baseSkuService.findSkuInfoBySkuId(skuId);
     }
 }

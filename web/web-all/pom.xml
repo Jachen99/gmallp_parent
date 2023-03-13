@@ -19,6 +19,12 @@
 
         <dependency>
             <groupId>space.jachen</groupId>
+            <artifactId>service-product-client</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>space.jachen</groupId>
             <artifactId>ervice-item-client</artifactId>
             <version>1.0.1</version>
         </dependency>

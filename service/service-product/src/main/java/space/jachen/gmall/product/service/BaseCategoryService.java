@@ -1,5 +1,6 @@
 package space.jachen.gmall.product.service;
 
+import com.alibaba.fastjson.JSONObject;
 import space.jachen.gmall.domain.base.BaseCategoryView;
 import space.jachen.gmall.domain.product.BaseCategory1;
 import space.jachen.gmall.domain.product.BaseCategory2;
@@ -44,4 +45,11 @@ public interface BaseCategoryService {
      * @return BaseCategoryView
      */
     BaseCategoryView getCategoryView(Long category3Id);
+
+    /**
+     * 获取首页分类数据
+     * @return List<JSONObject>
+     */
+    List<JSONObject> getBaseCategoryList();
+
 }
