@@ -68,27 +68,38 @@ public class BaseCategoryServiceImpl implements BaseCategoryService {
                 .collect(Collectors.groupingBy(BaseCategoryView::getCategory1Id));
         category1Map.forEach((category1Key, category1Value) -> {
             JSONObject category1 = new JSONObject();
-            category1.put("index",index.getAndIncrement());
-            category1.put("categoryId",category1Key);
-            category1.put("categoryName",category1Value.get(0).getCategory1Name());
+            category1.put("index", index.getAndIncrement());
+            category1.put("categoryId", category1Key);
+            category1.put("categoryName", category1Value.get(0).getCategory1Name());
             // 根据 category2Id 获取分组集合数据
             Map<Long, List<BaseCategoryView>> category2Map = category1Value.stream()
                     .collect(Collectors.groupingBy(BaseCategoryView::getCategory2Id));
-            category2Map.forEach((category2Key,category2Value)->{
+            //创建二级分类封装的集合
+            List<JSONObject> category2List = new ArrayList<>();
+            category2Map.forEach((category2Key, category2Value) -> {
                 JSONObject category2 = new JSONObject();
-                category2.put("categoryId",category2Key);
-                category2.put("categoryName",category2Value.get(0).getCategory2Name());
-                JSONObject category3 = new JSONObject();
-                category3.put("categoryId",category2Value.get(0).getCategory3Id());
-                category3.put("categoryName",category2Value.get(0).getCategory3Name());
-                // 存入category3
-                category2.put("categoryChild",category3);
-                // 存入category2
-                category1.put("categoryChild",category2);
+                category2.put("categoryId", category2Key);
+                category2.put("categoryName", category2Value.get(0).getCategory2Name());
+                //创建三级分类封装的集合
+                List<JSONObject> category3List = new ArrayList<>();
+                category2Value.forEach(category3Value -> {
+                    JSONObject category3 = new JSONObject();
+                    category3.put("categoryId", category3Value.getCategory3Id());
+                    category3.put("categoryName", category3Value.getCategory3Name());
+                    // 封装category3对象到Category3List集合
+                    category3List.add(category3);
+                });
+                // 设置三级分类list到二级分类对象
+                category2.put("categoryChild",category3List);
+                // 封装category2对象到Category2List集合
+                category2List.add(category2);
             });
+            // 设置二级分类list到一级分类对象
+            category1.put("categoryChild",category2List);
             // 存入结果集
             resultList.add(category1);
         });
         return resultList;
     }
+
 }
