@@ -7,10 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import space.jachen.gmall.common.result.Result;
 import space.jachen.gmall.domain.base.BaseCategoryView;
-import space.jachen.gmall.domain.product.BaseAttrInfo;
-import space.jachen.gmall.domain.product.SkuInfo;
-import space.jachen.gmall.domain.product.SpuPoster;
-import space.jachen.gmall.domain.product.SpuSaleAttr;
+import space.jachen.gmall.domain.product.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -24,6 +21,15 @@ import java.util.Map;
 public interface ProductFeignClient {
 
     public static final String BaseURL = "/api/product";
+
+
+    /**
+     * 根据品牌Id 获取品牌数据
+     * @param tmId 品牌Id
+     * @return  BaseTrademark
+     */
+    @GetMapping(BaseURL+"/inner/getTrademark/{tmId}")
+    public BaseTrademark getTrademark(@PathVariable Long tmId);
 
 
     /**

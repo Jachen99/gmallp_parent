@@ -40,6 +40,17 @@ public class ProductManagerApiController {
 
 
     /**
+     * 根据品牌Id 获取品牌数据
+     * @param tmId 品牌Id
+     * @return  BaseTrademark
+     */
+    @GetMapping("/inner/getTrademark/{tmId}")
+    public BaseTrademark getTrademark(@PathVariable Long tmId){
+        return baseTrademarkService.getTrademark(tmId);
+    }
+
+
+    /**
      * 获取首页分类数据
      * @return List<JSONObject>
      */
@@ -113,19 +124,6 @@ public class ProductManagerApiController {
     @PostMapping("/inner/getCategoryView/{category3Id}")
     public BaseCategoryView getCategoryView( @PathVariable Long category3Id){
         return baseCategoryService.getCategoryView(category3Id);
-    }
-
-
-
-    /**
-     * 根据品牌Id 获取品牌数据
-     * @param tmId 品牌Id
-     * @return  BaseTrademark
-     */
-    @GetMapping("/inner/getTrademark/{tmId}")
-    public Result<BaseTrademark> getTrademark(@PathVariable Long tmId){
-        BaseTrademark baseTrademarkResult = baseTrademarkService.getTrademark(tmId);
-        return Result.ok(baseTrademarkResult);
     }
 
 

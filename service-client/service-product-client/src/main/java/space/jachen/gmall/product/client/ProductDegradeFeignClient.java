@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Component;
 import space.jachen.gmall.common.result.Result;
 import space.jachen.gmall.domain.base.BaseCategoryView;
-import space.jachen.gmall.domain.product.BaseAttrInfo;
-import space.jachen.gmall.domain.product.SkuInfo;
-import space.jachen.gmall.domain.product.SpuPoster;
-import space.jachen.gmall.domain.product.SpuSaleAttr;
+import space.jachen.gmall.domain.product.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -19,6 +16,11 @@ import java.util.Map;
  */
 @Component
 public class ProductDegradeFeignClient implements ProductFeignClient{
+
+    @Override
+    public BaseTrademark getTrademark(Long tmId) {
+        return null;
+    }
 
     @Override
     public Result<List<JSONObject>> getBaseCategoryList() {
