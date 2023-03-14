@@ -17,4 +17,10 @@ public interface SearchService {
      * @param skuId   skuId
      */
     void lowerGoods(Long skuId);
+
+    /**
+     * 更新商品的热度排名
+     * @param skuId  skuId
+     */
+    void incrHotScore(Long skuId);
 }

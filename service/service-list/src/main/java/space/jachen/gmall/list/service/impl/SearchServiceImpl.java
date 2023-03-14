@@ -1,7 +1,9 @@
 package space.jachen.gmall.list.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import space.jachen.gmall.common.constant.RedisConst;
 import space.jachen.gmall.domain.base.BaseCategoryView;
 import space.jachen.gmall.domain.list.Goods;
 import space.jachen.gmall.domain.list.SearchAttr;
@@ -15,6 +17,7 @@ import space.jachen.gmall.product.client.ProductFeignClient;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -22,12 +25,15 @@ import java.util.stream.Collectors;
  * @date 2023/3/14 11:48
  */
 @Service
+@SuppressWarnings("all")
 public class SearchServiceImpl implements SearchService {
 
     @Resource
     private ProductFeignClient productFeignClient;
     @Autowired
     private GoodsRepository goodsRepository;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @Override
     public void upperGoods(Long skuId) {
@@ -75,5 +81,21 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public void lowerGoods(Long skuId) {
         goodsRepository.deleteById(skuId);
+    }
+
+    @Override
+    public void incrHotScore(Long skuId) {
+        String hotKey = "hotScore";
+        Double hotScore = redisTemplate.opsForZSet().incrementScore(hotKey, RedisConst.SKUKEY_PREFIX + skuId, 10);
+        // 每点击十次更新一次es
+        if (hotScore%100==0){
+            // 查询原始hotScore值
+            Optional<Goods> optional = goodsRepository.findById(skuId);
+            if (optional.isPresent()) {
+                Goods goods = optional.get();
+                goods.setHotScore(hotScore.longValue());
+                goodsRepository.save(goods);
+            }
+        }
     }
 }

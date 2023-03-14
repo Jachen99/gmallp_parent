@@ -9,6 +9,7 @@ import space.jachen.gmall.domain.product.SkuInfo;
 import space.jachen.gmall.domain.product.SpuPoster;
 import space.jachen.gmall.domain.product.SpuSaleAttr;
 import space.jachen.gmall.item.service.ItemService;
+import space.jachen.gmall.list.client.ListFeignClient;
 import space.jachen.gmall.product.client.ProductFeignClient;
 
 import java.math.BigDecimal;
@@ -31,6 +32,8 @@ public class ItemServiceImpl implements ItemService {
     private ProductFeignClient productFeignClient;
     @Autowired
     private ThreadPoolConfig threadPoolConfig;
+    @Autowired
+    private ListFeignClient listFeignClient;
 
     @Override
     public Map<String, Object> getSkuId(Long skuId) {
@@ -96,9 +99,14 @@ public class ItemServiceImpl implements ItemService {
             resultMap.put("skuPrice", skuPrice);
         },executor);
 
+        // 每点击10次详情页热度加100
+        CompletableFuture<Void> incrHotScoreFuture = future.runAsync(() -> {
+            listFeignClient.incrHotScore(skuId);
+        }, executor);
+
         // 汇总后一起返回
         future.allOf(skuInfoFuture,spuPosterListFuture,categoryViewFuture,spuSaleAttrListFuture,
-                valuesSkuJsonFuture,skuAttrListFuture,skuPriceFuture).join();
+                valuesSkuJsonFuture,skuAttrListFuture,skuPriceFuture,incrHotScoreFuture).join();
 
         return resultMap;
     }
