@@ -12,6 +12,13 @@
     <artifactId>service-util</artifactId>
 
     <dependencies>
+
+        <dependency>
+            <groupId>space.jachen</groupId>
+            <artifactId>model</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+
         <dependency>
             <groupId>space.jachen</groupId>
             <artifactId>common-util</artifactId>
