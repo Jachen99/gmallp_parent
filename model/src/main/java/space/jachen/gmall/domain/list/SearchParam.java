@@ -1,13 +1,11 @@
 package space.jachen.gmall.domain.list;
 
-import lombok.Builder;
 import lombok.Data;
 
 /**
  * 查询条件
  */
 @Data
-@Builder
 public class SearchParam {  // ?category3Id=61&trademark=2:华为&props=23:4G:运行内存&order=1:desc
 
     private Long category1Id;
