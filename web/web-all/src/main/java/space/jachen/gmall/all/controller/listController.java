@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import space.jachen.gmall.common.result.Result;
 import space.jachen.gmall.domain.list.SearchParam;
@@ -11,6 +12,9 @@ import space.jachen.gmall.domain.list.SearchResponseVo;
 import space.jachen.gmall.list.client.ListFeignClient;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,11 +34,74 @@ public class listController {
         Map map = JSONObject.parseObject(JSON.toJSONString(responseVoResult.getData()), Map.class);
         // 记录拼接url
         String urlParam = makeUrlParam(searchParam);
+        String trademarkParam = makeTmParam(searchParam);
+        List<Map<String, String>> propsParamList = this.makeProps(searchParam);
+        Map<String,Object> orderMap = this.makeOrder(searchParam);
         model.addAttribute("searchParam", searchParam);
         model.addAttribute("urlParam", urlParam);
+        model.addAttribute("trademarkParam",trademarkParam);
+        model.addAttribute("propsParamList",propsParamList);
+        model.addAttribute("orderMap",orderMap);
         model.addAllAttributes(map);
 
         return "list/index";
+    }
+
+    private Map<String, Object> makeOrder(SearchParam searchParam) {
+        Map<String,Object> orderMap = new HashMap<>();
+        String order = searchParam.getOrder();
+        if(!StringUtils.isEmpty(order)) {
+            String[] split = StringUtils.split(order, ":");
+            if (split != null && split.length == 2) {
+                // 传递的哪个字段
+                orderMap.put("type", split[0]);
+                // 升序降序
+                orderMap.put("sort", split[1]);
+            }
+        }else {
+            orderMap.put("type", "1");
+            orderMap.put("sort", "asc");
+        }
+        return orderMap;
+
+    }
+
+    /**
+     * 平台属性信息面包屑
+     * @param searchParam
+     * @return
+     */
+    private List<Map<String, String>> makeProps(SearchParam searchParam) {
+        List<Map<String, String>> list = new ArrayList<>();
+        String[] props = searchParam.getProps();
+        if (props!=null && props.length>0){
+            for (String prop : props) {
+                String[] split = prop.split(":");
+                if (split!=null && split.length==3){
+                    HashMap<String, String> map = new HashMap<String,String>();
+                    map.put("attrId",split[0]);
+                    map.put("attrValue",split[1]);
+                    map.put("attrName",split[2]);
+                    list.add(map);
+                }
+            }
+        }
+        return list;
+    }
+
+    /**
+     * 品牌面包屑
+     * @param searchParam
+     * @return
+     */
+    private String makeTmParam(SearchParam searchParam) {
+        if (!StringUtils.isEmpty(searchParam.getTrademark())) {
+            String[] split = searchParam.getTrademark().split(":");
+            if (split != null && split.length == 2) {
+                return "品牌：" + split[1];
+            }
+        }
+        return "";
     }
 
 

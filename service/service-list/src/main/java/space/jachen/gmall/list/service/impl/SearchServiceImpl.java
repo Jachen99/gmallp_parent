@@ -167,7 +167,7 @@ public class SearchServiceImpl implements SearchService {
         String[] props = searchParam.getProps();
         if ( null != props && props.length>0 ){
             for (String prop : props) {
-                String[] split = StringUtils.split(prop, ":");
+                String[] split = prop.split(":");
                 if ( null != split && split.length == 3 ){
                     BoolQueryBuilder builder = new BoolQueryBuilder();
                     BoolQueryBuilder subBuilder = new BoolQueryBuilder();
@@ -218,7 +218,7 @@ public class SearchServiceImpl implements SearchService {
         HighlightBuilder highlightBuilder = new HighlightBuilder();
         highlightBuilder.field("title");
         highlightBuilder.postTags("</span>");
-        highlightBuilder.preTags("<span style=color:red");
+        highlightBuilder.preTags("<span style=color:red>");
         searchSourceBuilder.highlighter(highlightBuilder);
         // 聚合之 品牌
         searchSourceBuilder.aggregation(

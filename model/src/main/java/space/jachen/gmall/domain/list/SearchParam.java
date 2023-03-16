@@ -34,7 +34,7 @@ public class SearchParam {  // ?category3Id=61&trademark=2:华为&props=23:4G:�
     /**
      * 每页默认显示的条数
      */
-    private Integer pageSize = 3;
+    private Integer pageSize = 5;
 
 
 }
