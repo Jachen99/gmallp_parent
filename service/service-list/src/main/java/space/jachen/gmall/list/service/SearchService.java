@@ -1,5 +1,8 @@
 package space.jachen.gmall.list.service;
 
+import space.jachen.gmall.domain.list.SearchParam;
+import space.jachen.gmall.domain.list.SearchResponseVo;
+
 /**
  * @author JaChen
  * @date 2023/3/14 11:47
@@ -23,4 +26,11 @@ public interface SearchService {
      * @param skuId  skuId
      */
     void incrHotScore(Long skuId);
+
+    /**
+     * 商品搜索
+     * @param searchParam  SearchParam
+     * @return  SearchResponseVo
+     */
+    SearchResponseVo list(SearchParam searchParam);
 }

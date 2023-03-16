@@ -3,6 +3,8 @@ package space.jachen.gmall.list.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import space.jachen.gmall.common.result.Result;
+import space.jachen.gmall.domain.list.SearchParam;
+import space.jachen.gmall.domain.list.SearchResponseVo;
 import space.jachen.gmall.list.service.SearchService;
 
 /**
@@ -15,6 +17,19 @@ public class ListApiController {
 
     @Autowired
     private SearchService searchService;
+
+    /**
+     * 商品搜索
+     * @param searchParam  SearchParam
+     * @return  SearchResponseVo
+     */
+    @PostMapping
+    public SearchResponseVo list(@RequestBody SearchParam searchParam){
+        SearchResponseVo responseVo = searchService.list(searchParam);
+        return responseVo;
+    }
+
+
 
 
     /**
