@@ -9,6 +9,7 @@ import org.thymeleaf.context.Context;
 import space.jachen.gmall.common.result.Result;
 import space.jachen.gmall.product.client.ProductFeignClient;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
@@ -25,6 +26,16 @@ public class HomeController {
     private ProductFeignClient productFeignClient;
     @Autowired
     private TemplateEngine templateEngine;
+
+    @GetMapping({"/","index.html"})
+    public String index(HttpServletRequest request){
+        // 获取首页分类数据
+        Result result = productFeignClient.getBaseCategoryList();
+        request.setAttribute("list",result.getData());
+        return "index/index";
+    }
+
+
 
     @GetMapping("/api/list/createIndex")
     public Result createIndex(){

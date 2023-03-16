@@ -18,18 +18,17 @@ public class ListApiController {
     @Autowired
     private SearchService searchService;
 
+
     /**
      * 商品搜索
      * @param searchParam  SearchParam
      * @return  SearchResponseVo
      */
     @PostMapping
-    public SearchResponseVo list(@RequestBody SearchParam searchParam){
+    public Result<SearchResponseVo> list(@RequestBody SearchParam searchParam){
         SearchResponseVo responseVo = searchService.list(searchParam);
-        return responseVo;
+        return Result.ok(responseVo);
     }
-
-
 
 
     /**
