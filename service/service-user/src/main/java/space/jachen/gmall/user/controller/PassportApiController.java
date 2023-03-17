@@ -59,11 +59,11 @@ public class PassportApiController {
             map.put("nickName", loginInfo.getNickName());
             // 把userId和ip存入redis，为下次校验使用，从而实现分布式下的单点登录
             JSONObject object = new JSONObject();
-            object.put("userId", userInfo.getId());
+            object.put("userId", loginInfo.getId());
             object.put("ip", com.atguigu.gmall.common.util.IpUtil.getIpAddress(request));
             redisTemplate.opsForValue().set(
-                    RedisConst.USER_LOGIN_KEY_PREFIX + "token",
-                    object.toString(),
+                    RedisConst.USER_LOGIN_KEY_PREFIX + token,
+                    object.toJSONString(),
                     RedisConst.USER_KEY_TIMEOUT,
                     TimeUnit.SECONDS);
             return Result.ok(map);
