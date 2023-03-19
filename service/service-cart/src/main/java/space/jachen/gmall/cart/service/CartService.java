@@ -10,6 +10,15 @@ import java.util.List;
  */
 public interface CartService {
 
+
+    /**
+     * 根据用户Id 查询购物车列表
+     *
+     * @param userId
+     * @return
+     */
+    List<CartInfo> getCartCheckedList(String userId);
+
     void deleteCart(Long skuId, String userId);
 
     /**

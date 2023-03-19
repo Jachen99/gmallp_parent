@@ -14,6 +14,7 @@ import space.jachen.gmall.domain.product.SkuInfo;
 import space.jachen.gmall.product.client.ProductFeignClient;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author JaChen
@@ -28,10 +29,30 @@ public class CartServiceImpl implements CartService {
     private RedisTemplate redisTemplate;
 
     @Override
+    public List<CartInfo> getCartCheckedList(String userId) {
+
+        String cartKey = getCartKey(userId);
+        List<CartInfo> cartInfoList = null;
+        if (!StringUtils.isEmpty(cartKey)) {
+            cartInfoList = redisTemplate.opsForHash().values(cartKey);
+            if (!CollectionUtils.isEmpty(cartInfoList)) {
+                cartInfoList = cartInfoList.stream().map(cartInfo -> {
+                    // 找出选中的商品返回
+                    if (cartInfo.getIsChecked().intValue() == 1) {
+                        return cartInfo;
+                    }
+                    return null;
+                }).collect(Collectors.toList());
+            }
+        }
+        return cartInfoList;
+    }
+
+    @Override
     public void deleteCart(Long skuId, String userId) {
         BoundHashOperations<String, String, CartInfo> boundHashOps = this.redisTemplate.boundHashOps(this.getCartKey(userId));
         //  判断购物车中是否有该商品
-        if (boundHashOps.hasKey(String.valueOf(skuId))){
+        if (boundHashOps.hasKey(String.valueOf(skuId))) {
             boundHashOps.delete(String.valueOf(skuId));
         }
     }

@@ -22,6 +22,18 @@ public class CartApiController {
     @Autowired
     private CartService cartService;
 
+    /**
+     * 根据用户Id 查询购物车列表
+     *
+     * @param userId userId
+     * @return  List<CartInfo>
+     */
+    @GetMapping("getCartCheckedList/{userId}")
+    public List<CartInfo> getCartCheckedList(@PathVariable String userId) {
+        return cartService.getCartCheckedList(userId);
+    }
+
+
 
     /**
      * 删除
@@ -31,7 +43,7 @@ public class CartApiController {
      * @return  Result<String>
      */
     @DeleteMapping("deleteCart/{skuId}")
-    public Result<String> deleteCart(@PathVariable("skuId") Long skuId, HttpServletRequest request) {
+    public Result<String> deleteCart(@PathVariable Long skuId, HttpServletRequest request) {
         // 如何获取userId
         String userId = AuthContextHolder.getUserId(request);
         if (StringUtils.isEmpty(userId)) {
@@ -88,7 +100,7 @@ public class CartApiController {
      * @return  Result<String>
      */
     @GetMapping("addToCart/{skuId}/{skuNum}")
-    public Result<String> addToCart(@PathVariable("skuId") Long skuId, @PathVariable("skuNum") Integer skuNum, HttpServletRequest request) {
+    public Result<String> addToCart(@PathVariable Long skuId, @PathVariable Integer skuNum, HttpServletRequest request) {
         // 如何获取userId
         String userId = AuthContextHolder.getUserId(request);
         if (StringUtils.isEmpty(userId)) {
