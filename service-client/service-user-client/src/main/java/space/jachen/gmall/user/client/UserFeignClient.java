@@ -22,6 +22,6 @@ public interface UserFeignClient {
      * @param userId  userId
      * @return  List<UserAddress>
      */
-    @GetMapping(BaseURL+"inner/findUserAddressListByUserId/{userId}")
+    @GetMapping(BaseURL+"/inner/findUserAddressListByUserId/{userId}")
     public List<UserAddress> findUserAddressListByUserId(@PathVariable("userId") String userId);
 }

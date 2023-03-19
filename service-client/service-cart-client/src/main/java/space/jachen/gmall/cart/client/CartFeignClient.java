@@ -22,7 +22,7 @@ public interface CartFeignClient {
      * @param userId userId
      * @return  List<CartInfo>
      */
-    @GetMapping(BaseURL+"getCartCheckedList/{userId}")
+    @GetMapping(BaseURL+"/getCartCheckedList/{userId}")
     public List<CartInfo> getCartCheckedList(@PathVariable String userId);
 
 
