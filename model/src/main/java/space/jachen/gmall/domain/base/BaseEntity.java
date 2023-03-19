@@ -18,6 +18,7 @@ import java.util.Date;
 @Data
 public class BaseEntity implements Serializable {
 
+
     /**
      * 编号id
      */

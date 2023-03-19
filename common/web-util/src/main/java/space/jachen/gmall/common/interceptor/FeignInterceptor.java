@@ -13,7 +13,7 @@ public class FeignInterceptor implements RequestInterceptor {
 
     public void apply(RequestTemplate requestTemplate){
 
-        //  微服务远程调用使用feign ，feign 传递数据的时候，没有。
+        //  解决feign调用请求头丢失问题
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         assert attributes != null;
         HttpServletRequest request = attributes.getRequest();

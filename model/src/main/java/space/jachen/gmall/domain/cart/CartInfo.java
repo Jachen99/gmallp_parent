@@ -2,8 +2,10 @@ package space.jachen.gmall.domain.cart;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.Tolerate;
 import space.jachen.gmall.domain.activity.CouponInfo;
 import space.jachen.gmall.domain.base.BaseEntity;
 
@@ -16,7 +18,11 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("cart_info")
+@Builder
 public class CartInfo extends BaseEntity {
+
+    @Tolerate
+    public CartInfo(){}
 
     private static final long serialVersionUID = 1L;
     /**
