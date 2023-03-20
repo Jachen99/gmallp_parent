@@ -94,7 +94,7 @@ public class OrderApiController {
                     cartFeignClient.getCartCheckedList(userId).forEach(cartInfo -> {
                         redisTemplate.opsForHash().put(
                                 RedisConst.USER_KEY_PREFIX + userId + RedisConst.USER_CART_KEY_SUFFIX,
-                                orderDetail.getSkuId(), cartInfo);
+                                String.valueOf(orderDetail.getSkuId()), cartInfo);
                     });
                     errorList.add(orderDetail.getSkuName() + ":价格有变动");
                 }
