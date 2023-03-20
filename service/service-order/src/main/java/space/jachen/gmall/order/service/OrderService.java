@@ -9,6 +9,15 @@ import space.jachen.gmall.domain.order.OrderInfo;
 public interface OrderService {
 
     /**
+     * 验证库存
+     * @param skuId
+     * @param skuNum
+     * @return
+     */
+    boolean checkStock(Long skuId, Integer skuNum);
+
+
+    /**
      * 生产流水号
      * @param userId  userId
      * @return String

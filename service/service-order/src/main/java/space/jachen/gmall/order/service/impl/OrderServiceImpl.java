@@ -1,6 +1,7 @@
 package space.jachen.gmall.order.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +34,15 @@ public class OrderServiceImpl implements OrderService {
     private OrderInfoMapper orderInfoMapper;
     @Autowired
     private StringRedisTemplate redisTemplate;
+    @Value("${ware.url}")
+    private String WARE_URL;
+
+    @Override
+    public boolean checkStock(Long skuId, Integer skuNum) {
+        String result = com.atguigu.gmall.common.util.HttpClientUtil
+                .doGet(WARE_URL + "/hasStock?skuId=" + skuId + "&num=" + skuNum);
+        return "1".equals(result);
+    }
 
     @Override
     public String getTradeNo(String userId) {
