@@ -39,7 +39,7 @@ public class OrderServiceImpl implements OrderService {
         String tradeKey = getTradeKey(userId);
         // 设置流水号
         String tradeNo = String.valueOf(UUID.randomUUID());
-        redisTemplate.opsForValue().set(tradeKey,tradeNo);
+        redisTemplate.opsForValue().set(tradeKey, tradeNo);
 
         return tradeNo;
     }
@@ -48,7 +48,7 @@ public class OrderServiceImpl implements OrderService {
     public boolean checkTradeCode(String userId, String tradeCodeNo) {
         String tradeKey = getTradeKey(userId);
         String redisTradeNo = redisTemplate.opsForValue().get(tradeKey);
-        if (!StringUtils.isEmpty(redisTradeNo)){
+        if (!StringUtils.isEmpty(redisTradeNo)) {
             if (redisTradeNo.equals(tradeCodeNo))
                 return true;
         }
@@ -68,10 +68,10 @@ public class OrderServiceImpl implements OrderService {
         orderInfo.sumTotalAmount();
         orderInfo.setOrderStatus(OrderStatus.UNPAID.name());
         orderInfo.setCreateTime(new Date());
-        orderInfo.setOutTradeNo("gmall"+UUID.randomUUID());
+        orderInfo.setOutTradeNo("gmall" + UUID.randomUUID());
         // 失效时间
         Calendar instance = Calendar.getInstance();
-        instance.add(Calendar.DATE,1);
+        instance.add(Calendar.DATE, 1);
         orderInfo.setExpireTime(instance.getTime());
         // 进度状态
         orderInfo.setProcessStatus(ProcessStatus.UNPAID.name());
@@ -80,22 +80,26 @@ public class OrderServiceImpl implements OrderService {
         StringBuffer tradeBody = new StringBuffer();
         orderDetailList.forEach(orderDetail -> {
             tradeBody.append(orderDetail.getSkuName());
+        });
+        if (tradeBody.length() > 50) {
+            orderInfo.setTradeBody(tradeBody.substring(0, 50));
+        } else {
+            orderInfo.setTradeBody(String.valueOf(tradeBody));
+        }
+        orderInfoMapper.insert(orderInfo);
+        // 需要存完orderInfo之后才能获取id
+        orderDetailList.forEach(orderDetail -> {
             // 处理订单详情业务
             orderDetail.setOrderId(orderInfo.getId());
             orderDetailMapper.insert(orderDetail);
         });
-        if (tradeBody.length()>50){
-            orderInfo.setTradeBody(tradeBody.substring(0,50));
-        }else {
-            orderInfo.setTradeBody(String.valueOf(tradeBody));
-        }
-        orderInfoMapper.insert(orderInfo);
+        System.out.println("id = " + orderInfo.getId());
 
         return orderInfo.getId();
     }
 
 
     private static String getTradeKey(String userId) {
-        return RedisConst.USER_KEY_PREFIX+userId+RedisConst.USER_TRADE_KEY_SUFFIX;
+        return RedisConst.USER_KEY_PREFIX + userId + RedisConst.USER_TRADE_KEY_SUFFIX;
     }
 }
