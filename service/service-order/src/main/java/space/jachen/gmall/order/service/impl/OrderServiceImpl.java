@@ -1,5 +1,7 @@
 package space.jachen.gmall.order.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -36,6 +38,16 @@ public class OrderServiceImpl implements OrderService {
     private StringRedisTemplate redisTemplate;
     @Value("${ware.url}")
     private String WARE_URL;
+
+    @Override
+    public IPage<OrderInfo> getPage(Page<OrderInfo> pageParam, String userId) {
+        IPage<OrderInfo> page = orderInfoMapper.selectPageByUserId(pageParam, userId);
+        page.getRecords().stream().forEach(item -> {
+            item.setOrderStatusName(OrderStatus.getStatusNameByStatus(item.getOrderStatus()));
+        });
+
+        return page;
+    }
 
     @Override
     public boolean checkStock(Long skuId, Integer skuNum) {

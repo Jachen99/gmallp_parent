@@ -1,5 +1,7 @@
 package space.jachen.gmall.order.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -48,6 +50,25 @@ public class OrderApiController {
     private RedisTemplate redisTemplate;
     @Autowired
     private ThreadPoolConfig threadPoolConfig;
+
+
+    /**
+     * 我的订单
+     * @param page  页数
+     * @param limit  每页记录
+     * @param request  HttpServletRequest
+     * @return  Result<IPage<OrderInfo>>
+     */
+    @GetMapping("auth/{page}/{limit}")
+    public Result<IPage<OrderInfo>> index(@PathVariable Long page, @PathVariable Long limit, HttpServletRequest request) {
+        // 获取到用户Id
+        String userId = AuthContextHolder.getUserId(request);
+        Page<OrderInfo> pageParam = new Page<>(page, limit);
+        IPage<OrderInfo> infoIPage = orderService.getPage(pageParam, userId);
+
+        return Result.ok(infoIPage);
+    }
+
 
     /**
      * 提交订单

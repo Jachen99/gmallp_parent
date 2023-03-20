@@ -21,6 +21,17 @@ public class OrderController {
     private OrderFeignClient orderFeignClient;
 
     /**
+     * 我的订单
+     * @return
+     */
+    @GetMapping("myOrder.html")
+    public String myOrder() {
+
+        return "order/myOrder";
+    }
+
+
+    /**
      * 确认订单
      * @param model
      * @return

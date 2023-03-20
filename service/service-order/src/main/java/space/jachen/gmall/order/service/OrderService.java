@@ -1,5 +1,7 @@
 package space.jachen.gmall.order.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import space.jachen.gmall.domain.order.OrderInfo;
 
 /**
@@ -7,6 +9,15 @@ import space.jachen.gmall.domain.order.OrderInfo;
  * @date 2023/3/20 16:49
  */
 public interface OrderService {
+
+
+    /**
+     * 分页展示订单列表
+     * @param pageParam  pageParam
+     * @param userId  userId
+     * @return  IPage<OrderInfo>
+     */
+    IPage<OrderInfo> getPage(Page<OrderInfo> pageParam, String userId);
 
     /**
      * 验证库存
