@@ -8,6 +8,7 @@ public class RedisConst {
 
     public static final String SKUKEY_PREFIX = "sku:";
     public static final String SKUKEY_SUFFIX = ":info";
+
     //单位：秒
     public static final long SKUKEY_TIMEOUT = 24 * 60 * 60;
     // 定义变量，记录空对象的缓存过期时间
@@ -21,6 +22,7 @@ public class RedisConst {
 
     public static final String USER_KEY_PREFIX = "user:";
     public static final String USER_CART_KEY_SUFFIX = ":cart";
+    public static final String USER_TRADE_KEY_SUFFIX = ":trade";
     public static final long USER_CART_EXPIRE = 60 * 60 * 24 * 30;
 
     //用户登录
