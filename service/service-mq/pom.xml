@@ -12,6 +12,14 @@
     <packaging>jar</packaging>
     <artifactId>service-mq</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>space.jachen</groupId>
+            <artifactId>rabbit-util</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <finalName>service-mq</finalName>
         <plugins>
