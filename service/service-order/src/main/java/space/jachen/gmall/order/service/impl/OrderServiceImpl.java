@@ -40,6 +40,22 @@ public class OrderServiceImpl implements OrderService {
     private String WARE_URL;
 
     @Override
+    public void execExpiredOrder(Long orderId) {
+        // orderInfo
+        updateOrderStatus(orderId, ProcessStatus.CLOSED);
+    }
+
+    @Override
+    public void updateOrderStatus(Long orderId, ProcessStatus processStatus) {
+        OrderInfo orderInfo = new OrderInfo();
+        orderInfo.setId(orderId);
+        orderInfo.setProcessStatus(processStatus.name());
+        orderInfo.setOrderStatus(processStatus.getOrderStatus().name());
+
+        orderInfoMapper.updateById(orderInfo);
+    }
+
+    @Override
     public IPage<OrderInfo> getPage(Page<OrderInfo> pageParam, String userId) {
         IPage<OrderInfo> page = orderInfoMapper.selectPageByUserId(pageParam, userId);
         page.getRecords().stream().forEach(item -> {

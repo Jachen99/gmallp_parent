@@ -2,6 +2,7 @@ package space.jachen.gmall.order.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import space.jachen.gmall.domain.enums.ProcessStatus;
 import space.jachen.gmall.domain.order.OrderInfo;
 
 /**
@@ -9,6 +10,21 @@ import space.jachen.gmall.domain.order.OrderInfo;
  * @date 2023/3/20 16:49
  */
 public interface OrderService {
+
+
+    /**
+     * 处理过期订单
+     * @param orderId
+     */
+    void execExpiredOrder(Long orderId);
+
+
+    /**
+     * 根据订单Id 修改订单的状态
+     * @param orderId
+     * @param processStatus
+     */
+    void updateOrderStatus(Long orderId, ProcessStatus processStatus);
 
 
     /**
