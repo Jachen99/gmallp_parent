@@ -13,6 +13,12 @@
 
     <dependencies>
 
+        <dependency>
+            <groupId>space.jachen</groupId>
+            <artifactId>rabbit-util</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+
         <!-- 对象存储服务 -->
         <dependency>
             <groupId>io.minio</groupId>

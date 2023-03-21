@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import space.jachen.gmall.common.cache.GmallCache;
+import space.jachen.gmall.common.constant.MqConst;
+import space.jachen.gmall.common.service.RabbitService;
 import space.jachen.gmall.domain.base.BaseEntity;
 import space.jachen.gmall.domain.product.*;
 import space.jachen.gmall.product.mapper.*;
@@ -34,6 +36,8 @@ public class BaseSkuServiceImpl implements BaseSkuService {
     private BaseAttrInfoMapper baseAttrInfoMapper;
     @Autowired
     private BaseAttrValueMapper baseAttrValueMapper;
+    @Autowired
+    private RabbitService rabbitService;
 
     @Override
     public void saveSkuInfo(SkuInfo skuInfo) {
@@ -84,8 +88,9 @@ public class BaseSkuServiceImpl implements BaseSkuService {
         SkuInfo skuInfo = new SkuInfo();
         skuInfo.setId(skuId);
         skuInfo.setIsSale(1);
-
         skuInfoMapper.updateById(skuInfo);
+        // 发送mq消息 进行上架
+        rabbitService.sendMessage(MqConst.EXCHANGE_DIRECT_GOODS, MqConst.ROUTING_GOODS_UPPER, skuId);
     }
 
     @Override
@@ -94,8 +99,9 @@ public class BaseSkuServiceImpl implements BaseSkuService {
         SkuInfo skuInfo = new SkuInfo();
         skuInfo.setId(skuId);
         skuInfo.setIsSale(0);
-
         skuInfoMapper.updateById(skuInfo);
+        // 发送mq消息 进行下架
+        rabbitService.sendMessage(MqConst.EXCHANGE_DIRECT_GOODS, MqConst.ROUTING_GOODS_LOWER, skuId);
     }
 
     @Override

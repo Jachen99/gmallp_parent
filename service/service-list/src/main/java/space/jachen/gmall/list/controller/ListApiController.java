@@ -43,26 +43,26 @@ public class ListApiController {
     }
 
 
-    /**
-     * 上架
-     * @param skuId skuId
-     * @return Result
-     */
-    @GetMapping("/inner/upperGoods/{skuId}")
-    public Result<String> upperGoods(@PathVariable Long skuId){
-        searchService.upperGoods(skuId);
-        return Result.ok();
-    }
-
-    /**
-     * 下架
-     * @param skuId skuId
-     * @return Result
-     */
-    @DeleteMapping("/inner/lowerGoods/{skuId}")
-    public Result<String> lowerGoods(@PathVariable Long skuId){
-        searchService.lowerGoods(skuId);
-        return Result.ok();
-    }
+//    /**
+//     * 上架
+//     * @param skuId skuId
+//     * @return Result
+//     */
+//    @GetMapping("/inner/upperGoods/{skuId}")
+//    public Result<String> upperGoods(@PathVariable Long skuId){
+//        searchService.upperGoods(skuId);
+//        return Result.ok();
+//    }
+//
+//    /**
+//     * 下架
+//     * @param skuId skuId
+//     * @return Result
+//     */
+//    @DeleteMapping("/inner/lowerGoods/{skuId}")
+//    public Result<String> lowerGoods(@PathVariable Long skuId){
+//        searchService.lowerGoods(skuId);
+//        return Result.ok();
+//    }
 
 }
