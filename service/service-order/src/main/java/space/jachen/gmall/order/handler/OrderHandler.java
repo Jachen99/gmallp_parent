@@ -20,13 +20,16 @@ public class OrderHandler {
     /**
      * 取消订单的handler方法
      *
-     * @param param  null
+     * @param orderId  orderId
      * @return  ReturnT<String>
      */
     @XxlJob(value = "OrderHandler",init = "init",destroy = "destroy")
-    public ReturnT<String> execute(String param){
+    public ReturnT<String> execute(Long orderId){
         System.out.println("execute方法执行了 ====》 ");
-
+        // 动态新增任务 需要对admin进行二次开发 新增动态接口
+        // 待处理......
+        // 处理业务
+        orderService.execExpiredOrder(orderId);
 
         return ReturnT.SUCCESS;
     }
