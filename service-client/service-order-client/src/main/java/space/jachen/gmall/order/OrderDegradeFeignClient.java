@@ -2,6 +2,7 @@ package space.jachen.gmall.order;
 
 import org.springframework.stereotype.Component;
 import space.jachen.gmall.common.result.Result;
+import space.jachen.gmall.domain.order.OrderInfo;
 
 import java.util.Map;
 
@@ -11,6 +12,11 @@ import java.util.Map;
  */
 @Component
 public class OrderDegradeFeignClient implements OrderFeignClient {
+
+    @Override
+    public Result<OrderInfo> getOrderInfo(Long orderId) {
+        return null;
+    }
 
     @Override
     public Result<Map<String, Object>> trade() {

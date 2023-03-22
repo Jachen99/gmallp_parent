@@ -53,6 +53,18 @@ public class OrderApiController {
 
 
     /**
+     * 内部调用获取订单
+     * @param orderId
+     * @return
+     */
+    @GetMapping("inner/getOrderInfo/{orderId}")
+    public Result<OrderInfo> getOrderInfo(@PathVariable Long orderId){
+        return Result.ok(orderService.getOrderInfo(orderId));
+    }
+
+
+
+    /**
      * 我的订单
      * @param page  页数
      * @param limit  每页记录

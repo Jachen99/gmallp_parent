@@ -14,6 +14,15 @@ public interface OrderService extends IService<OrderInfo> {
 
 
     /**
+     * 根据订单Id 查询订单信息
+     * @param orderId
+     * @return
+     */
+    OrderInfo getOrderInfo(Long orderId);
+
+
+
+    /**
      * 处理过期订单
      * @param orderId
      */
