@@ -13,6 +13,14 @@
 
     <dependencies>
 
+        <!--导入支付宝支付sdk-->
+        <dependency>
+            <groupId>com.alipay.sdk</groupId>
+            <artifactId>alipay-sdk-java</artifactId>
+            <version>4.8.73.ALL</version>
+        </dependency>
+
+
         <dependency>
             <groupId>space.jachen</groupId>
             <artifactId>service-order-client</artifactId>
