@@ -1,5 +1,6 @@
 package space.jachen.gmall.payment.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import space.jachen.gmall.domain.order.OrderInfo;
 import space.jachen.gmall.domain.payment.PaymentInfo;
 
@@ -9,7 +10,7 @@ import java.util.Map;
  * @author JaChen
  * @date 2023/3/22 18:43
  */
-public interface PaymentService {
+public interface PaymentService extends IService<PaymentInfo> {
 
     /**
      * 保存交易记录

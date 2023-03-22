@@ -1,16 +1,21 @@
 package space.jachen.gmall.payment.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipayTradePagePayRequest;
+import com.alipay.api.request.AlipayTradeRefundRequest;
 import com.alipay.api.response.AlipayTradePagePayResponse;
+import com.alipay.api.response.AlipayTradeRefundResponse;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import space.jachen.gmall.domain.enums.PaymentStatus;
 import space.jachen.gmall.domain.enums.PaymentType;
 import space.jachen.gmall.domain.order.OrderInfo;
 import space.jachen.gmall.domain.payment.PaymentInfo;
@@ -20,6 +25,7 @@ import space.jachen.gmall.payment.service.AlipayService;
 import space.jachen.gmall.payment.service.PaymentService;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -39,6 +45,34 @@ public class AlipayServiceImpl implements AlipayService {
     private PaymentService paymentService;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
+    @Override
+    public boolean refund(Long orderId) {
+        AlipayTradeRefundRequest request = new AlipayTradeRefundRequest();
+        OrderInfo orderInfo = orderFeignClient.getOrderInfo(orderId).getData();
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("out_trade_no", orderInfo.getOutTradeNo());
+        map.put("refund_amount", 0.01);
+        map.put("refund_reason", "不想要了");
+        request.setBizContent(JSON.toJSONString(map));
+        AlipayTradeRefundResponse response = null;
+        try {
+            response = alipayClient.execute(request);
+        } catch (AlipayApiException e) {
+            e.printStackTrace();
+        }
+        if (response.isSuccess()) {
+            PaymentInfo paymentInfo = new PaymentInfo();
+            paymentInfo.setPaymentStatus(PaymentStatus.CLOSED.name());
+            LambdaQueryWrapper<PaymentInfo> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(PaymentInfo::getOutTradeNo,orderInfo.getOutTradeNo());
+            paymentService.update(paymentInfo,queryWrapper);
+            return true;
+        } else {
+            return false;
+        }
+
+    }
 
     @Override
     @SneakyThrows

@@ -1,6 +1,7 @@
 package space.jachen.gmall.payment.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ import java.util.Map;
  * @date 2023/3/22 18:44
  */
 @Service
-public class PaymentServiceImpl implements PaymentService {
+public class PaymentServiceImpl extends ServiceImpl<PaymentInfoMapper,PaymentInfo> implements PaymentService {
     @Autowired
     private PaymentInfoMapper paymentInfoMapper;
     @Autowired

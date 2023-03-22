@@ -9,6 +9,13 @@ import java.util.Map;
 public interface AlipayService {
 
     /**
+     * 退款接口
+     * @param orderId
+     * @return
+     */
+    boolean refund(Long orderId);
+
+    /**
      * 创建支付
      * @param orderId
      * @return

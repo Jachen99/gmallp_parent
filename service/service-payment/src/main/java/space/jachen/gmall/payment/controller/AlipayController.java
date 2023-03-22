@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import space.jachen.gmall.common.result.Result;
 import space.jachen.gmall.payment.config.AlipayConfig;
 import space.jachen.gmall.payment.service.AlipayService;
 
@@ -20,6 +21,16 @@ public class AlipayController {
 
     @Autowired
     private AlipayService alipayService;
+
+
+    @RequestMapping("refund/{orderId}")
+    @ResponseBody
+    public Result<Boolean> refund(@PathVariable(value = "orderId")Long orderId) {
+        boolean flag = alipayService.refund(orderId);
+        
+        return Result.ok(flag);
+    }
+
 
 
     /**
