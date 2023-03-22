@@ -2,6 +2,7 @@ package space.jachen.gmall.order.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
 import space.jachen.gmall.domain.enums.ProcessStatus;
 import space.jachen.gmall.domain.order.OrderInfo;
 
@@ -9,7 +10,7 @@ import space.jachen.gmall.domain.order.OrderInfo;
  * @author JaChen
  * @date 2023/3/20 16:49
  */
-public interface OrderService {
+public interface OrderService extends IService<OrderInfo> {
 
 
     /**

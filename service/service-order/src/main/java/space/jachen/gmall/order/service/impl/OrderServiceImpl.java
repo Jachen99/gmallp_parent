@@ -2,12 +2,15 @@ package space.jachen.gmall.order.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import space.jachen.gmall.common.config.DeadLetterMqConfig;
 import space.jachen.gmall.common.constant.RedisConst;
 import space.jachen.gmall.domain.enums.OrderStatus;
 import space.jachen.gmall.domain.enums.ProcessStatus;
@@ -28,7 +31,7 @@ import java.util.UUID;
  */
 @Service
 @SuppressWarnings("all")
-public class OrderServiceImpl implements OrderService {
+public class OrderServiceImpl extends ServiceImpl<OrderInfoMapper,OrderInfo> implements OrderService {
 
     @Autowired
     private OrderDetailMapper orderDetailMapper;
@@ -36,6 +39,8 @@ public class OrderServiceImpl implements OrderService {
     private OrderInfoMapper orderInfoMapper;
     @Autowired
     private StringRedisTemplate redisTemplate;
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
     @Value("${ware.url}")
     private String WARE_URL;
 
@@ -132,6 +137,12 @@ public class OrderServiceImpl implements OrderService {
             orderDetailMapper.insert(orderDetail);
         });
         System.out.println("id = " + orderInfo.getId());
+
+        //发送延迟队列，如果定时未支付，取消订单
+        rabbitTemplate.convertAndSend(
+                DeadLetterMqConfig.exchange_dead,
+                DeadLetterMqConfig.routing_dead_1,
+                orderInfo.getId());
 
         return orderInfo.getId();
     }
