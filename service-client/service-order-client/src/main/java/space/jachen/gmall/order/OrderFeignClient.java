@@ -22,7 +22,7 @@ public interface OrderFeignClient {
      * @param orderId
      * @return
      */
-    @GetMapping("inner/getOrderInfo/{orderId}")
+    @GetMapping(BaseURL+"/inner/getOrderInfo/{orderId}")
     public Result<OrderInfo> getOrderInfo(@PathVariable Long orderId);
 
     /**

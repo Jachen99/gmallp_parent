@@ -100,6 +100,7 @@ public class AlipayServiceImpl implements AlipayService {
         AlipayTradePagePayResponse response = alipayClient.pageExecute(request);
         if (response.isSuccess()) {
             log.info("调用成功");
+            paymentService.savePaymentInfo(orderInfo,PaymentType.ALIPAY.name());
             return response.getBody();
         }
         log.error("调用失败");

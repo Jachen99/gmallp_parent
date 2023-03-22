@@ -33,6 +33,7 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentInfoMapper,PaymentInf
         if(count > 0) return;
         // 保存交易记录
         PaymentInfo paymentInfo = new PaymentInfo();
+        paymentInfo.setUserId(orderInfo.getUserId());
         paymentInfo.setCreateTime(new Date());
         paymentInfo.setOrderId(orderInfo.getId());
         paymentInfo.setPaymentType(paymentType);

@@ -23,11 +23,16 @@ public class AlipayController {
     private AlipayService alipayService;
 
 
+    /**
+     * 退款
+     * @param orderId
+     * @return
+     */
     @RequestMapping("refund/{orderId}")
     @ResponseBody
     public Result<Boolean> refund(@PathVariable(value = "orderId")Long orderId) {
         boolean flag = alipayService.refund(orderId);
-        
+
         return Result.ok(flag);
     }
 
