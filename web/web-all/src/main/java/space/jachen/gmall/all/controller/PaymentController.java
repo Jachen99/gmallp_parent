@@ -21,6 +21,17 @@ public class PaymentController {
     private OrderFeignClient orderFeignClient;
 
     /**
+     * 支付成功页
+     * @return
+     */
+    @GetMapping("pay/success.html")
+    public String success() {
+
+        return "payment/success";
+    }
+
+
+    /**
      * 支付页
      * @param request
      * @return
