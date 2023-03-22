@@ -1,12 +1,13 @@
 package space.jachen.gmall.payment.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import space.jachen.gmall.payment.config.AlipayConfig;
 import space.jachen.gmall.payment.service.AlipayService;
+
+import java.util.Map;
 
 /**
  * @author JaChen
@@ -14,6 +15,7 @@ import space.jachen.gmall.payment.service.AlipayService;
  */
 @Controller
 @RequestMapping("/api/payment/alipay")
+@Slf4j
 public class AlipayController {
 
     @Autowired
@@ -21,8 +23,22 @@ public class AlipayController {
 
 
     /**
-     * 支付宝回调
-     * @return
+     * 支付宝异步回调
+     *      - 需要内网穿透
+     * @param paramsMap  Map<String, String>
+     * @return  String
+     */
+    @PostMapping("/callback/notify")
+    @ResponseBody
+    public String callbackNotify(@RequestParam Map<String, String> paramsMap){
+
+        return alipayService.callbackNotify(paramsMap);
+    }
+
+
+    /**
+     * 支付宝同步回调
+     * @return  String
      */
     @RequestMapping("callback/return")
     public String callBack() {
@@ -32,8 +48,8 @@ public class AlipayController {
 
     /**
      * 创建支付请求
-     * @param orderId
-     * @return
+     * @param orderId  orderId
+     * @return  String
      */
     @RequestMapping("submit/{orderId}")
     @ResponseBody

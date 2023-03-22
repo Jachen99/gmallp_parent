@@ -1,5 +1,7 @@
 package space.jachen.gmall.payment.service;
 
+import java.util.Map;
+
 /**
  * @author JaChen
  * @date 2023/3/22 19:15
@@ -12,4 +14,12 @@ public interface AlipayService {
      * @return
      */
     String createdPay(Long orderId);
+
+    /**
+     * 支付宝异步回调
+     *      - 需要内网穿透
+     * @param paramsMap  Map<String, String>
+     * @return  String
+     */
+    String callbackNotify(Map<String, String> paramsMap);
 }

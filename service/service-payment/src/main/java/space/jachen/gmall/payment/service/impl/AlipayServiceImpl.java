@@ -1,18 +1,27 @@
 package space.jachen.gmall.payment.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
+import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.alipay.api.response.AlipayTradePagePayResponse;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import space.jachen.gmall.domain.enums.PaymentType;
 import space.jachen.gmall.domain.order.OrderInfo;
+import space.jachen.gmall.domain.payment.PaymentInfo;
 import space.jachen.gmall.order.OrderFeignClient;
 import space.jachen.gmall.payment.config.AlipayConfig;
 import space.jachen.gmall.payment.service.AlipayService;
 import space.jachen.gmall.payment.service.PaymentService;
+
+import java.math.BigDecimal;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author JaChen
@@ -28,6 +37,9 @@ public class AlipayServiceImpl implements AlipayService {
     private AlipayClient alipayClient;
     @Autowired
     private PaymentService paymentService;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
     @Override
     @SneakyThrows
     public String createdPay(Long orderId) {
@@ -52,11 +64,63 @@ public class AlipayServiceImpl implements AlipayService {
         bizContent.put("product_code", "FAST_INSTANT_TRADE_PAY");
         request.setBizContent(bizContent.toString());
         AlipayTradePagePayResponse response = alipayClient.pageExecute(request);
-        if(response.isSuccess()){
+        if (response.isSuccess()) {
             log.info("调用成功");
             return response.getBody();
         }
         log.error("调用失败");
         return "支付失败，请联系管理员...";
+    }
+
+    @Override
+    public String callbackNotify(Map<String, String> paramsMap) {
+
+        // 对支付宝异步回调方法进行验签
+        log.info("支付异步回调验签方法执行.....");
+        boolean flag = false;
+        try {
+            // 验签
+            flag = AlipaySignature.rsaCheckV1(paramsMap, AlipayConfig.alipay_public_key, AlipayConfig.charset, AlipayConfig.sign_type);
+        } catch (AlipayApiException e) {
+            flag = false;
+            e.printStackTrace();
+        }
+        //  获取异步通知的参数中的订单号
+        String outTradeNo = paramsMap.get("out_trade_no");
+        //  获取异步通知的参数中的订单总金额
+        String totalAmount = paramsMap.get("total_amount");
+        //  获取异步通知的参数中的appId
+        String appId = paramsMap.get("app_id");
+        //  获取异步通知的参数中的交易状态
+        String tradeStatus = paramsMap.get("trade_status");
+        //  保证异步通知的幂等性 notify_id
+        String notifyId = paramsMap.get("notify_id");
+        //  根据outTradeNo 查询数据
+        PaymentInfo paymentinfo = this.paymentService.getPaymentInfo(outTradeNo, PaymentType.ALIPAY.name());
+        // 验签成功需要进行二次校验
+        if (flag) {
+            if (paymentinfo == null || new BigDecimal("0.01").compareTo(new BigDecimal(totalAmount)) != 0
+                    || !appId.equals(AlipayConfig.app_id)) {
+
+                return "failure";
+            }
+            //  setnx：当 key 不存在的时候生效
+            Boolean redisFlag = this.stringRedisTemplate.opsForValue().setIfAbsent(notifyId, notifyId, 1462, TimeUnit.MINUTES);
+            //  说明已经处理过了
+            if (!redisFlag) {
+
+                return "failure";
+            }
+            if ("TRADE_SUCCESS".equals(tradeStatus) || "TRADE_FINISHED".equals(tradeStatus)) {
+                //  修改交易记录状态 再订单状态
+                this.paymentService.paySuccess(outTradeNo, PaymentType.ALIPAY.name(), paramsMap);
+
+                return "success";
+            }
+
+            return "failure";
+        }
+
+        return "failure";
     }
 }
