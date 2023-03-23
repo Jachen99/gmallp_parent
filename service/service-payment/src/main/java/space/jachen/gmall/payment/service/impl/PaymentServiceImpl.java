@@ -30,6 +30,7 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentInfoMapper,PaymentInf
     private RabbitService rabbitService;
     @Override
     public void savePaymentInfo(OrderInfo orderInfo, String paymentType) {
+
         QueryWrapper<PaymentInfo> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("order_id", orderInfo.getId());
         queryWrapper.eq("payment_type", paymentType);
@@ -83,6 +84,20 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentInfoMapper,PaymentInf
             this.stringRedisTemplate.delete(paramsMap.get("notify_id"));
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void closePayment(Long orderId) {
+        // 设置关闭交易记录的条件  118
+        QueryWrapper<PaymentInfo> paymentInfoQueryWrapper = new QueryWrapper<>();
+        paymentInfoQueryWrapper.eq("order_id",orderId);
+        // 如果当前的交易记录不存在，则不更新交易记录
+        Integer count = paymentInfoMapper.selectCount(paymentInfoQueryWrapper);
+        if (null == count || count.intValue()==0) return;
+        // 在关闭支付宝交易之前。还需要关闭paymentInfo
+        PaymentInfo paymentInfo = new PaymentInfo();
+        paymentInfo.setPaymentStatus(PaymentStatus.CLOSED.name());
+        paymentInfoMapper.update(paymentInfo,paymentInfoQueryWrapper);
     }
 
 }

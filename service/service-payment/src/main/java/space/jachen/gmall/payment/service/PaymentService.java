@@ -34,4 +34,9 @@ public interface PaymentService extends IService<PaymentInfo> {
      * @param paramsMap  Map<String, String>
      */
     void paySuccess(String outTradeNo, String name, Map<String, String> paramsMap);
+
+    /**
+     * 关闭订单交易
+     */
+    void closePayment(Long orderId);
 }
