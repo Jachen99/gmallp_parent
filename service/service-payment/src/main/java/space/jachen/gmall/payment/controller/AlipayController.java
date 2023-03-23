@@ -24,6 +24,23 @@ public class AlipayController {
 
 
     /**
+     * 查看是否有交易记录
+     * @param orderId
+     * @return
+     */
+    @RequestMapping("checkPayment/{orderId}")
+    @ResponseBody
+    public Boolean checkPayment(@PathVariable Long orderId){
+        // 调用退款接口
+        boolean flag = alipayService.checkPayment(orderId);
+        return flag;
+    }
+
+
+
+
+
+    /**
      * 根据订单Id关闭订单
      * @param orderId
      * @return

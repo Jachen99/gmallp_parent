@@ -7,9 +7,11 @@ import com.alipay.api.AlipayClient;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipayTradeCloseRequest;
 import com.alipay.api.request.AlipayTradePagePayRequest;
+import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.request.AlipayTradeRefundRequest;
 import com.alipay.api.response.AlipayTradeCloseResponse;
 import com.alipay.api.response.AlipayTradePagePayResponse;
+import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.alipay.api.response.AlipayTradeRefundResponse;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.SneakyThrows;
@@ -47,6 +49,25 @@ public class AlipayServiceImpl implements AlipayService {
     private PaymentService paymentService;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
+    @SneakyThrows
+    @Override
+    public Boolean checkPayment(Long orderId) {
+        // 根据订单Id 查询订单信息
+        OrderInfo orderInfo = orderFeignClient.getOrderInfo(orderId).getData();
+        AlipayTradeQueryRequest request = new AlipayTradeQueryRequest();
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("out_trade_no",orderInfo.getOutTradeNo());
+        // 根据out_trade_no 查询交易记录
+        request.setBizContent(JSON.toJSONString(map));
+        AlipayTradeQueryResponse response = alipayClient.execute(request);
+        if(response.isSuccess()){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
     @SneakyThrows
     @Override
