@@ -49,6 +49,16 @@ public class OrderServiceImpl extends ServiceImpl<OrderInfoMapper,OrderInfo> imp
     private String WARE_URL;
 
     @Override
+    public void execExpiredOrder(Long orderId, String flag) {
+        // 调用方法 状态
+        updateOrderStatus(orderId,ProcessStatus.CLOSED);
+        if ("2".equals(flag)){
+            // 发送消息队列，关闭支付宝的交易记录。
+            rabbitService.sendMessage(MqConst.EXCHANGE_DIRECT_PAYMENT_CLOSE,MqConst.ROUTING_PAYMENT_CLOSE,orderId);
+        }
+    }
+
+    @Override
     @Transactional
     public List<OrderInfo> orderSplit(Long orderId, String wareSkuMap) {
         List<OrderInfo> orderInfoArrayList = new ArrayList<>();

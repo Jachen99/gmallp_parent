@@ -17,6 +17,15 @@ public interface OrderService extends IService<OrderInfo> {
 
 
     /**
+     * 更新过期订单
+     * @param orderId
+     * @param flag
+     */
+    void execExpiredOrder(Long orderId,String flag);
+
+
+
+    /**
      * 拆单接口
      * @param orderId
      * @param wareSkuMap
