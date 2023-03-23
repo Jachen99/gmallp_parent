@@ -105,7 +105,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderInfoMapper,OrderInfo> imp
                 // 计算总金额
                 subOrderInfo.sumTotalAmount();
                 // 保存子订单
-                saveOrderInfo(subOrderInfo);
+                saveOrderInfo(subOrderInfo,ProcessStatus.SPLIT);
                 // 将子订单添加到集合中
                 orderInfoArrayList.add(subOrderInfo);
             }
@@ -181,7 +181,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderInfoMapper,OrderInfo> imp
     public void execExpiredOrder(Long orderId) {
         // orderInfo
         updateOrderStatus(orderId, ProcessStatus.CLOSED);
-        
+        // 发送消息 关闭交易
+        rabbitService.sendMessage(MqConst.EXCHANGE_DIRECT_PAYMENT_CLOSE, MqConst.ROUTING_PAYMENT_CLOSE, orderId);
     }
 
     @Override
@@ -241,9 +242,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderInfoMapper,OrderInfo> imp
 
     @Override
     @Transactional
-    public Long saveOrderInfo(OrderInfo orderInfo) {
+    public Long saveOrderInfo(OrderInfo orderInfo,ProcessStatus processStatus) {
         orderInfo.sumTotalAmount();
-        orderInfo.setOrderStatus(OrderStatus.UNPAID.name());
+        orderInfo.setOrderStatus(processStatus.getOrderStatus().name());
         orderInfo.setCreateTime(new Date());
         orderInfo.setOutTradeNo("gmall" + UUID.randomUUID());
         // 失效时间
@@ -251,7 +252,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderInfoMapper,OrderInfo> imp
         instance.add(Calendar.DATE, 1);
         orderInfo.setExpireTime(instance.getTime());
         // 进度状态
-        orderInfo.setProcessStatus(ProcessStatus.UNPAID.name());
+        orderInfo.setProcessStatus(processStatus.name());
         // 获取订单明细列表
         List<OrderDetail> orderDetailList = orderInfo.getOrderDetailList();
         StringBuffer tradeBody = new StringBuffer();

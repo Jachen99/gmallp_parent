@@ -108,5 +108,5 @@ public interface OrderService extends IService<OrderInfo> {
      * @param orderInfo  OrderInfo
      * @return Long
      */
-    Long saveOrderInfo(OrderInfo orderInfo);
+    Long saveOrderInfo(OrderInfo orderInfo,ProcessStatus processStatus);
 }

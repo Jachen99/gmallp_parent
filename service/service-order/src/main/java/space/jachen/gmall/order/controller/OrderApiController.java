@@ -14,6 +14,7 @@ import space.jachen.gmall.common.constant.RedisConst;
 import space.jachen.gmall.common.result.Result;
 import space.jachen.gmall.common.util.AuthContextHolder;
 import space.jachen.gmall.domain.cart.CartInfo;
+import space.jachen.gmall.domain.enums.ProcessStatus;
 import space.jachen.gmall.domain.order.OrderDetail;
 import space.jachen.gmall.domain.order.OrderInfo;
 import space.jachen.gmall.domain.user.UserAddress;
@@ -165,7 +166,7 @@ public class OrderApiController {
         if (!CollectionUtils.isEmpty(errorList))
             return Result.fail().message(StringUtils.join(errorList,";\n"));
         // 验证通过，保存订单
-        Long orderId = orderService.saveOrderInfo(orderInfo);
+        Long orderId = orderService.saveOrderInfo(orderInfo, ProcessStatus.UNPAID);
         //  删除流水号
         orderService.deleteTradeNo(userId);
         return Result.ok(orderId);
