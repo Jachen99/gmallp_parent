@@ -44,7 +44,7 @@ public class DeadLetterMqConfig {
         map.put("x-dead-letter-exchange",exchange_dead);
         map.put("x-dead-letter-routing-key",routing_dead_2);
         // 设置延迟时间
-        map.put("x-message-ttl", 10 * 1000);
+        map.put("x-message-ttl", 60 * 1000);
         // 队列名称，是否持久化，是否独享、排外的【true:只可以在本次连接中访问】，是否自动删除，队列的其他属性参数
         return new Queue(queue_dead_1,true,false,false,map);
     }
