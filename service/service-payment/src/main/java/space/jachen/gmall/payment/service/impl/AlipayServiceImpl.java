@@ -5,8 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.internal.util.AlipaySignature;
+import com.alipay.api.request.AlipayTradeCloseRequest;
 import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.alipay.api.request.AlipayTradeRefundRequest;
+import com.alipay.api.response.AlipayTradeCloseResponse;
 import com.alipay.api.response.AlipayTradePagePayResponse;
 import com.alipay.api.response.AlipayTradeRefundResponse;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -45,6 +47,27 @@ public class AlipayServiceImpl implements AlipayService {
     private PaymentService paymentService;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
+    @SneakyThrows
+    @Override
+    public Boolean closePay(Long orderId) {
+        OrderInfo orderInfo = orderFeignClient.getOrderInfo(orderId).getData();
+        AlipayTradeCloseRequest request = new AlipayTradeCloseRequest();
+        HashMap<String, Object> map = new HashMap<>();
+        // map.put("trade_no",paymentInfo.getTradeNo()); // 从paymentInfo 中获取
+        map.put("out_trade_no",orderInfo.getOutTradeNo());
+        // map.put("operator_id","YX01");
+        request.setBizContent(JSON.toJSONString(map));
+        AlipayTradeCloseResponse response = alipayClient.execute(request);
+        if(response.isSuccess()){
+            System.out.println("调用成功");
+            return true;
+        } else {
+            System.out.println("调用失败");
+            return false;
+        }
+    }
+
 
     @Override
     public boolean refund(Long orderId) {

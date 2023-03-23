@@ -24,6 +24,19 @@ public class AlipayController {
 
 
     /**
+     * 根据订单Id关闭订单
+     * @param orderId
+     * @return
+     */
+    @GetMapping("closePay/{orderId}")
+    @ResponseBody
+    public Boolean closePay(@PathVariable Long orderId){
+        return alipayService.closePay(orderId);
+    }
+
+
+
+    /**
      * 退款
      * @param orderId
      * @return

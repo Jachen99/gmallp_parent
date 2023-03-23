@@ -8,6 +8,14 @@ import java.util.Map;
  */
 public interface AlipayService {
 
+    /***
+     * 关闭交易
+     * @param orderId
+     * @return
+     */
+    Boolean closePay(Long orderId);
+
+
     /**
      * 退款接口
      * @param orderId
