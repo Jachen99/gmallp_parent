@@ -5,8 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import space.jachen.gmall.common.result.Result;
+import space.jachen.gmall.domain.enums.PaymentType;
+import space.jachen.gmall.domain.payment.PaymentInfo;
 import space.jachen.gmall.payment.config.AlipayConfig;
 import space.jachen.gmall.payment.service.AlipayService;
+import space.jachen.gmall.payment.service.PaymentService;
 
 import java.util.Map;
 
@@ -21,6 +24,21 @@ public class AlipayController {
 
     @Autowired
     private AlipayService alipayService;
+    @Autowired
+    private PaymentService paymentService;
+
+
+    /**
+     * 根据outTradeNo、ALIPAY查询订单信息
+     * @param outTradeNo
+     * @return
+     */
+    @GetMapping("getPaymentInfo/{outTradeNo}")
+    @ResponseBody
+    public PaymentInfo getPaymentInfo(@PathVariable String outTradeNo){
+        return paymentService.getPaymentInfo(outTradeNo, PaymentType.ALIPAY.name());
+    }
+
 
 
     /**
@@ -32,11 +50,8 @@ public class AlipayController {
     @ResponseBody
     public Boolean checkPayment(@PathVariable Long orderId){
         // 调用退款接口
-        boolean flag = alipayService.checkPayment(orderId);
-        return flag;
+        return alipayService.checkPayment(orderId);
     }
-
-
 
 
 
