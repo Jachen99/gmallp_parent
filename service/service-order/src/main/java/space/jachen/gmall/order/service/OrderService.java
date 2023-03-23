@@ -6,11 +6,28 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import space.jachen.gmall.domain.enums.ProcessStatus;
 import space.jachen.gmall.domain.order.OrderInfo;
 
+import java.util.Map;
+
 /**
  * @author JaChen
  * @date 2023/3/20 16:49
  */
 public interface OrderService extends IService<OrderInfo> {
+
+
+    /**
+     * 发送消息给库存
+     * @param orderId
+     */
+    void sendOrderStatus(Long orderId);
+
+
+    /**
+     *将orderInfo变为map集合
+     * @param orderInfo
+     */
+     Map initWareOrder(OrderInfo orderInfo);
+
 
 
     /**

@@ -1,5 +1,6 @@
 package space.jachen.gmall.order.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -12,7 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import space.jachen.gmall.common.config.DeadLetterMqConfig;
+import space.jachen.gmall.common.constant.MqConst;
 import space.jachen.gmall.common.constant.RedisConst;
+import space.jachen.gmall.common.service.RabbitService;
 import space.jachen.gmall.domain.enums.OrderStatus;
 import space.jachen.gmall.domain.enums.ProcessStatus;
 import space.jachen.gmall.domain.order.OrderDetail;
@@ -21,10 +24,7 @@ import space.jachen.gmall.order.mapper.OrderDetailMapper;
 import space.jachen.gmall.order.mapper.OrderInfoMapper;
 import space.jachen.gmall.order.service.OrderService;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author JaChen
@@ -42,8 +42,61 @@ public class OrderServiceImpl extends ServiceImpl<OrderInfoMapper,OrderInfo> imp
     private StringRedisTemplate redisTemplate;
     @Autowired
     private RabbitTemplate rabbitTemplate;
+    @Autowired
+    private RabbitService rabbitService;
     @Value("${ware.url}")
     private String WARE_URL;
+
+    @Override
+    public void sendOrderStatus(Long orderId) {
+        // 更新订单状态为 已通知仓储
+        this.updateOrderStatus(orderId, ProcessStatus.NOTIFIED_WARE);
+        String wareJson = initWareOrder(orderId);
+
+        rabbitService.sendMessage(MqConst.EXCHANGE_DIRECT_WARE_STOCK, MqConst.ROUTING_WARE_STOCK, wareJson);
+    }
+
+    // 根据orderId 获取json 字符串
+    private String initWareOrder(Long orderId) {
+        // 通过orderId 获取orderInfo
+        OrderInfo orderInfo = getOrderInfo(orderId);
+        // 将orderInfo中部分数据转换为Map
+        Map map = initWareOrder(orderInfo);
+
+        return JSON.toJSONString(map);
+    }
+
+
+    @Override
+    public Map initWareOrder(OrderInfo orderInfo) {
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("orderId", orderInfo.getId());
+        map.put("consignee", orderInfo.getConsignee());
+        map.put("consigneeTel", orderInfo.getConsigneeTel());
+        map.put("orderComment", orderInfo.getOrderComment());
+        map.put("orderBody", orderInfo.getTradeBody());
+        map.put("deliveryAddress", orderInfo.getDeliveryAddress());
+        map.put("paymentWay", "2");  // 2:在线支付
+        map.put("wareId", "");// 仓库Id ，减库存拆单时需要使用
+        /*
+        details:[{skuId:101,skuNum:1,skuName:
+        ’小米手64G’},
+        {skuId:201,skuNum:1,skuName:’索尼耳机’}]
+         */
+        List<Map> mapArrayList = new ArrayList<>();
+        List<OrderDetail> orderDetailList = orderInfo.getOrderDetailList();
+        for (OrderDetail orderDetail : orderDetailList) {
+            HashMap<String, Object> orderDetailMap = new HashMap<>();
+            orderDetailMap.put("skuId", orderDetail.getSkuId());
+            orderDetailMap.put("skuNum", orderDetail.getSkuNum());
+            orderDetailMap.put("skuName", orderDetail.getSkuName());
+            mapArrayList.add(orderDetailMap);
+        }
+        map.put("details", mapArrayList);
+        return map;
+
+    }
 
     @Override
     public OrderInfo getOrderInfo(Long orderId) {
