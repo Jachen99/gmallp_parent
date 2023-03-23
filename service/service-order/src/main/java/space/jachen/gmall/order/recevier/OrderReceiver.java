@@ -3,10 +3,15 @@ package space.jachen.gmall.order.recevier;
 import com.rabbitmq.client.Channel;
 import lombok.SneakyThrows;
 import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.annotation.Exchange;
+import org.springframework.amqp.rabbit.annotation.Queue;
+import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import space.jachen.gmall.common.config.DeadLetterMqConfig;
+import space.jachen.gmall.common.constant.MqConst;
+import space.jachen.gmall.domain.enums.ProcessStatus;
 import space.jachen.gmall.domain.order.OrderInfo;
 import space.jachen.gmall.order.service.OrderService;
 
@@ -18,6 +23,31 @@ import space.jachen.gmall.order.service.OrderService;
 public class OrderReceiver {
     @Autowired
     private OrderService orderService;
+
+
+
+
+    @SneakyThrows
+    @RabbitListener(bindings=@QueueBinding(
+            value= @Queue(value= MqConst.QUEUE_PAYMENT_PAY,durable= "true",autoDelete = "false"),
+            exchange= @Exchange(value= MqConst.EXCHANGE_DIRECT_PAYMENT_PAY),
+            key= {MqConst.ROUTING_PAYMENT_PAY})
+    )
+    public void upOrder(Long orderId ,Message message,Channel channel) {
+        //断orderId不为空
+        if (null != orderId) {
+            //更新订单的状态，还有进度的状态
+            OrderInfo orderInfo = orderService.getById(orderId);
+            //判断状态了准备更新据
+            if (null != orderInfo && orderInfo.getOrderStatus().equals(ProcessStatus.UNPAID.getOrderStatus().name()))
+                orderService.updateOrderStatus(orderId, ProcessStatus.PAID);
+        }
+        //手动确以
+        channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+    }
+
+
+
 
     //  监听的消息
     @SneakyThrows

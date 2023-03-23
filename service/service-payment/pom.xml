@@ -13,6 +13,12 @@
 
     <dependencies>
 
+        <dependency>
+            <groupId>space.jachen</groupId>
+            <artifactId>rabbit-util</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+
         <!--导入支付宝支付sdk-->
         <dependency>
             <groupId>com.alipay.sdk</groupId>

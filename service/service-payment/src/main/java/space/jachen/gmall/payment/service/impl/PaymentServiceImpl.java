@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import space.jachen.gmall.common.constant.MqConst;
+import space.jachen.gmall.common.service.RabbitService;
 import space.jachen.gmall.domain.enums.PaymentStatus;
 import space.jachen.gmall.domain.order.OrderInfo;
 import space.jachen.gmall.domain.payment.PaymentInfo;
@@ -24,6 +26,8 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentInfoMapper,PaymentInf
     private PaymentInfoMapper paymentInfoMapper;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    private RabbitService rabbitService;
     @Override
     public void savePaymentInfo(OrderInfo orderInfo, String paymentType) {
         QueryWrapper<PaymentInfo> queryWrapper = new QueryWrapper<>();
@@ -72,6 +76,8 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentInfoMapper,PaymentInf
             paymentInfoQueryWrapper.eq("out_trade_no",outTradeNo);
             paymentInfoQueryWrapper.eq("payment_type",name);
             paymentInfoMapper.update(paymentInfo,paymentInfoQueryWrapper);
+            // 发送消息更新订单状态
+            rabbitService.sendMessage(MqConst.EXCHANGE_DIRECT_PAYMENT_PAY,MqConst.ROUTING_PAYMENT_PAY,paymentInfoQuery.getOrderId());
         } catch (Exception e) {
             //  删除key
             this.stringRedisTemplate.delete(paramsMap.get("notify_id"));
