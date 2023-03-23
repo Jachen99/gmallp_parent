@@ -1,5 +1,6 @@
 package space.jachen.gmall.order.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.lang3.StringUtils;
@@ -50,6 +51,31 @@ public class OrderApiController {
     private RedisTemplate redisTemplate;
     @Autowired
     private ThreadPoolConfig threadPoolConfig;
+
+
+    /**
+     * 拆单业务
+     * @param request
+     * @return
+     */
+    @RequestMapping("orderSplit")
+    public String orderSplit(HttpServletRequest request){
+        String orderId = request.getParameter("orderId");
+        String wareSkuMap = request.getParameter("wareSkuMap");
+        // 拆单：获取到的子订单集合
+        List<OrderInfo> subOrderInfoList = orderService.orderSplit(Long.parseLong(orderId),wareSkuMap);
+        // 声明一个存储map的集合
+        List<Map> mapArrayList = new ArrayList<>();
+        // 生成子订单集合
+        for (OrderInfo orderInfo : subOrderInfoList) {
+            Map map = orderService.initWareOrder(orderInfo);
+            // 添加到集合中
+            mapArrayList.add(map);
+        }
+        return JSON.toJSONString(mapArrayList);
+    }
+
+
 
 
     /**

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import space.jachen.gmall.domain.enums.ProcessStatus;
 import space.jachen.gmall.domain.order.OrderInfo;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -14,6 +15,14 @@ import java.util.Map;
  */
 public interface OrderService extends IService<OrderInfo> {
 
+
+    /**
+     * 拆单接口
+     * @param orderId
+     * @param wareSkuMap
+     * @return
+     */
+    List<OrderInfo> orderSplit(Long orderId, String wareSkuMap);
 
     /**
      * 发送消息给库存

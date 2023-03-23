@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -46,6 +47,74 @@ public class OrderServiceImpl extends ServiceImpl<OrderInfoMapper,OrderInfo> imp
     private RabbitService rabbitService;
     @Value("${ware.url}")
     private String WARE_URL;
+
+    @Override
+    @Transactional
+    public List<OrderInfo> orderSplit(Long orderId, String wareSkuMap) {
+        List<OrderInfo> orderInfoArrayList = new ArrayList<>();
+        /*
+        1.  先获取到原始订单 107
+        2.  将wareSkuMap 转换为我们能操作的对象 [{"wareId":"1","skuIds":["2","10"]},{"wareId":"2","skuIds":["3"]}]
+            方案一：class Param{
+                        private String wareId;
+                        private List<String> skuIds;
+                    }
+            方案二：看做一个Map mpa.put("wareId",value); map.put("skuIds",value)
+
+        3.  创建一个新的子订单 108 109 。。。
+        4.  给子订单赋值
+        5.  保存子订单到数据库
+        6.  修改原始订单的状态
+        7.  测试
+         */
+        OrderInfo orderInfoOrigin = getOrderInfo(orderId);
+        // 获取数据
+        List<Map> maps = JSON.parseArray(wareSkuMap, Map.class);
+        if (maps != null) {
+            for (Map map : maps) {
+                String wareId = (String) map.get("wareId");
+                List<String> skuIds = (List<String>) map.get("skuIds");
+                OrderInfo subOrderInfo = new OrderInfo();
+                // 属性拷贝
+                BeanUtils.copyProperties(orderInfoOrigin, subOrderInfo);
+                // 防止主键冲突
+                subOrderInfo.setId(null);
+                subOrderInfo.setParentOrderId(orderId);
+                // 赋值仓库Id
+                subOrderInfo.setWareId(wareId);
+
+                // 计算子订单的金额: 必须有订单明细
+                // 获取到子订单明细
+                // 声明一个集合来存储子订单明细
+                List<OrderDetail> orderDetails = new ArrayList<>();
+
+                List<OrderDetail> orderDetailList = orderInfoOrigin.getOrderDetailList();
+                // 表示主主订单明细中获取到子订单的明细
+                if (orderDetailList != null && orderDetailList.size() > 0) {
+                    for (OrderDetail orderDetail : orderDetailList) {
+                        // 获取子订单明细的商品Id
+                        for (String skuId : skuIds) {
+                            if (Long.parseLong(skuId) == orderDetail.getSkuId().longValue()) {
+                                // 将订单明细添加到集合
+                                orderDetails.add(orderDetail);
+                            }
+                        }
+                    }
+                }
+                subOrderInfo.setOrderDetailList(orderDetails);
+                // 计算总金额
+                subOrderInfo.sumTotalAmount();
+                // 保存子订单
+                saveOrderInfo(subOrderInfo);
+                // 将子订单添加到集合中
+                orderInfoArrayList.add(subOrderInfo);
+            }
+        }
+        // 修改原始订单的状态  已经拆单
+        updateOrderStatus(orderId, ProcessStatus.SPLIT);
+        return orderInfoArrayList;
+    }
+
 
     @Override
     public void sendOrderStatus(Long orderId) {
@@ -112,6 +181,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderInfoMapper,OrderInfo> imp
     public void execExpiredOrder(Long orderId) {
         // orderInfo
         updateOrderStatus(orderId, ProcessStatus.CLOSED);
+        
     }
 
     @Override
