@@ -117,7 +117,7 @@ public class OrderReceiver {
                     //  判断 用户点击了扫码支付
                     if(paymentInfo!=null && "UNPAID".equals(paymentInfo.getPaymentStatus())){
 
-                        //  查看是否有交易记录！
+                        //  查看是否有支付宝交易记录！
                         Boolean flag = paymentFeignClient.checkPayment(orderId);
                         //  判断
                         if (flag){

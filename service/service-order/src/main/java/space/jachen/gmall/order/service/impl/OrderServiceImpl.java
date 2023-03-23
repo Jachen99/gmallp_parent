@@ -53,7 +53,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderInfoMapper,OrderInfo> imp
         // 调用方法 状态
         updateOrderStatus(orderId,ProcessStatus.CLOSED);
         if ("2".equals(flag)){
-            // 发送消息队列，关闭支付宝的交易记录。
+            // 给支付服务发送消息队列，关闭支付宝的交易记录。
             rabbitService.sendMessage(MqConst.EXCHANGE_DIRECT_PAYMENT_CLOSE,MqConst.ROUTING_PAYMENT_CLOSE,orderId);
         }
     }
