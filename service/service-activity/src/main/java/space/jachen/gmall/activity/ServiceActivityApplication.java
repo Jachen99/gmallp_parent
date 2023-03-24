@@ -16,6 +16,6 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableFeignClients(basePackages = "space.jachen.gmall")
 public class ServiceActivityApplication {
     public static void main(String[] args) {
-        SpringApplication.run(ServiceActivityApplication.class, args);
+        SpringApplication.run(ServiceActivityApplication.class);
     }
 }
