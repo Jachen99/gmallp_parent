@@ -2,6 +2,7 @@ package space.jachen.gmall.domain.activity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import space.jachen.gmall.domain.base.BaseEntity;
@@ -59,12 +60,14 @@ public class SeckillGoods extends BaseEntity {
 	 * 添加日期
 	 */
 	@TableField("create_time")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date createTime;
 
 	/**
 	 * 审核日期
 	 */
 	@TableField("check_time")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date checkTime;
 
 	/**
@@ -77,12 +80,14 @@ public class SeckillGoods extends BaseEntity {
 	 * 开始时间
 	 */
 	@TableField("start_time")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date startTime;
 
 	/**
 	 * 结束时间
 	 */
 	@TableField("end_time")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date endTime;
 
 	/**
