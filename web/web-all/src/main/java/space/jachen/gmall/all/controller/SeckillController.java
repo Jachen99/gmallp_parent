@@ -12,6 +12,7 @@ import space.jachen.gmall.domain.activity.SeckillGoods;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author JaChen
@@ -23,6 +24,27 @@ public class SeckillController {
 
     @Autowired
     private ActivityFeignClient activityFeignClient;
+
+
+    /**
+     * 确认订单
+     * @param model
+     * @return
+     */
+    @GetMapping("seckill/trade.html")
+    public String trade(Model model) {
+        Result<Map<String, Object>> result = activityFeignClient.trade();
+        if(result.isOk()) {
+            model.addAllAttributes(result.getData());
+
+            return "seckill/trade";
+        } else {
+            model.addAttribute("message",result.getMessage());
+
+            return "seckill/fail";
+        }
+    }
+
 
 
     /**

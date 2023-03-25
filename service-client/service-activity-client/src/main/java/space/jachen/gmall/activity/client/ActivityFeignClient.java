@@ -7,6 +7,7 @@ import space.jachen.gmall.common.result.Result;
 import space.jachen.gmall.domain.activity.SeckillGoods;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author JaChen
@@ -17,6 +18,14 @@ public interface ActivityFeignClient {
 
 
     public static final String BaseURL = "/api/activity/seckill";
+
+
+    /**
+     * 秒杀确认订单
+     * @return
+     */
+    @GetMapping(BaseURL+"/auth/trade")
+    public Result<Map<String,Object>> trade();
 
 
     /**

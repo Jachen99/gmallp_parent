@@ -187,7 +187,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderInfoMapper,OrderInfo> imp
         return orderInfo;
     }
 
-    @Override
     public void execExpiredOrder(Long orderId) {
         // orderInfo
         updateOrderStatus(orderId, ProcessStatus.CLOSED);

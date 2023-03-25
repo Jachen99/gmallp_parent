@@ -14,6 +14,11 @@ import java.util.Map;
 public class OrderDegradeFeignClient implements OrderFeignClient {
 
     @Override
+    public Long submitOrder(OrderInfo orderInfo) {
+        return null;
+    }
+
+    @Override
     public Result<OrderInfo> getOrderInfo(Long orderId) {
         return null;
     }

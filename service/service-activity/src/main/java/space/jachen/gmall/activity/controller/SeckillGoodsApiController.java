@@ -7,24 +7,30 @@ package space.jachen.gmall.activity.controller;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import space.jachen.gmall.activity.service.SeckillGoodsService;
 import space.jachen.gmall.activity.utils.CacheHelper;
 import space.jachen.gmall.common.constant.MqConst;
+import space.jachen.gmall.common.constant.RedisConst;
 import space.jachen.gmall.common.result.Result;
 import space.jachen.gmall.common.result.ResultCodeEnum;
 import space.jachen.gmall.common.util.AuthContextHolder;
 import space.jachen.gmall.common.util.DateUtil;
 import space.jachen.gmall.common.util.MD5;
+import space.jachen.gmall.domain.activity.OrderRecode;
 import space.jachen.gmall.domain.activity.SeckillGoods;
 import space.jachen.gmall.domain.activity.UserRecode;
+import space.jachen.gmall.domain.order.OrderDetail;
+import space.jachen.gmall.domain.order.OrderInfo;
+import space.jachen.gmall.domain.user.UserAddress;
+import space.jachen.gmall.order.OrderFeignClient;
 import space.jachen.gmall.product.client.ProductFeignClient;
 import space.jachen.gmall.user.client.UserFeignClient;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/activity/seckill")
@@ -33,14 +39,85 @@ public class SeckillGoodsApiController {
 
     @Autowired
     private SeckillGoodsService seckillGoodsService;
-
     @Autowired
     private UserFeignClient userFeignClient;
-
     @Autowired
     private ProductFeignClient productFeignClient;
     @Autowired
     private RabbitTemplate rabbitTemplate;
+    @Autowired
+    private RedisTemplate redisTemplate;
+    @Autowired
+    private OrderFeignClient orderFeignClient;
+
+    @PostMapping("auth/submitOrder")
+    public Result submitOrder(@RequestBody OrderInfo orderInfo, HttpServletRequest request) {
+        String userId = AuthContextHolder.getUserId(request);
+        orderInfo.setUserId(Long.parseLong(userId));
+        Long orderId = orderFeignClient.submitOrder(orderInfo);
+        if (null == orderId) {
+            return Result.fail().message("下单失败，请重新操作");
+        }
+        //删除下单信息
+        redisTemplate.boundHashOps(RedisConst.SECKILL_ORDERS).delete(userId);
+        //下单记录
+        redisTemplate.boundHashOps(RedisConst.SECKILL_ORDERS_USERS).put(userId, orderId.toString());
+
+        return Result.ok(orderId);
+    }
+
+
+
+
+    /**
+     * 秒杀确认订单
+     * @param request
+     * @return
+     */
+    @GetMapping("auth/trade")
+    public Result<Map<String,Object>> trade(HttpServletRequest request) {
+        // 获取到用户Id
+        String userId = AuthContextHolder.getUserId(request);
+
+        // 先得到用户想要购买的商品！
+        OrderRecode orderRecode = (OrderRecode) redisTemplate.boundHashOps(RedisConst.SECKILL_ORDERS).get(userId);
+        if (null == orderRecode) {
+            return Result.fail();
+        }
+        SeckillGoods seckillGoods = orderRecode.getSeckillGoods();
+
+        // 获取商品详情list
+        ArrayList<OrderDetail> detailArrayList = getDetailArrayList(orderRecode, seckillGoods);
+
+        // 计算总金额
+        OrderInfo orderInfo = new OrderInfo();
+        orderInfo.setOrderDetailList(detailArrayList);
+        orderInfo.sumTotalAmount();
+
+        //获取用户地址
+        List<UserAddress> userAddressList = userFeignClient.findUserAddressListByUserId(userId);
+        Map<String, Object> result = new HashMap<>();
+        result.put("userAddressList", userAddressList);
+        result.put("detailArrayList", detailArrayList);
+        result.put("totalAmount", orderInfo.getTotalAmount());
+
+        return Result.ok(result);
+    }
+
+    private static ArrayList<OrderDetail> getDetailArrayList(OrderRecode orderRecode, SeckillGoods seckillGoods) {
+        // 声明一个集合来存储订单明细
+        ArrayList<OrderDetail> detailArrayList = new ArrayList<>();
+        OrderDetail orderDetail = new OrderDetail();
+        orderDetail.setSkuId(seckillGoods.getSkuId());
+        orderDetail.setSkuName(seckillGoods.getSkuName());
+        orderDetail.setImgUrl(seckillGoods.getSkuDefaultImg());
+        orderDetail.setSkuNum(orderRecode.getNum());
+        orderDetail.setOrderPrice(seckillGoods.getCostPrice());
+        // 添加到集合
+        detailArrayList.add(orderDetail);
+
+        return detailArrayList;
+    }
 
 
     /**
