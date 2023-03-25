@@ -32,5 +32,12 @@ public class XxlJobHandler {
         return ReturnT.SUCCESS;
     }
 
+    @XxlJob(value = "seckillOverHandler")
+    public ReturnT<String> execute1(String param){
+        rabbitTemplate.convertAndSend(MqConst.EXCHANGE_DIRECT_TASK, MqConst.ROUTING_TASK_18, "");
+
+        return ReturnT.SUCCESS;
+    }
+
 
 }

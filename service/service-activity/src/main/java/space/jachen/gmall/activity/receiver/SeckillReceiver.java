@@ -39,6 +39,56 @@ public class SeckillReceiver {
     private SeckillGoodsService seckillGoodsService;
 
 
+
+    //  监听删除消息！
+    @SneakyThrows
+    @RabbitListener(bindings = @QueueBinding(
+            value = @Queue(value = MqConst.QUEUE_TASK_18,durable = "true",autoDelete = "false"),
+            exchange = @Exchange(value = MqConst.EXCHANGE_DIRECT_TASK),
+            key = {MqConst.ROUTING_TASK_18}
+    ))
+    public void deleteRedisData(Message message, Channel channel){
+        try {
+            //  查询哪些商品是秒杀结束的！end_time , status = 1
+            //  select * from seckill_goods where status = 1 and end_time < new Date();
+            QueryWrapper<SeckillGoods> seckillGoodsQueryWrapper = new QueryWrapper<>();
+            seckillGoodsQueryWrapper.eq("status",1);
+            seckillGoodsQueryWrapper.le("end_time",new Date());
+            List<SeckillGoods> seckillGoodsList = seckillGoodsMapper.selectList(seckillGoodsQueryWrapper);
+
+            //  对应将秒杀结束缓存中的数据删除！
+            for (SeckillGoods seckillGoods : seckillGoodsList) {
+                //  seckill:stock:46 删除库存对应key
+                redisTemplate.delete(RedisConst.SECKILL_STOCK_PREFIX+seckillGoods.getSkuId());
+                //  如果有多个秒杀商品的时候，
+                //  redisTemplate.boundHashOps(RedisConst.SECKILL_GOODS).delete(seckillGoods.getSkuId());
+            }
+            //  删除预热等数据！ 主要针对于预热数据删除！ 我们项目只针对一个商品的秒杀！ 如果是多个秒杀商品，则不能这样直接删除预热秒杀商品的key！
+            //  46 : 10:00 -- 10:30 | 47 : 18:10 -- 18:30
+            redisTemplate.delete(RedisConst.SECKILL_GOODS);
+            //  预下单
+            redisTemplate.delete(RedisConst.SECKILL_ORDERS);
+            //  删除真正下单数据
+            redisTemplate.delete(RedisConst.SECKILL_ORDERS_USERS);
+
+            //  修改数据库秒杀对象的状态！
+            SeckillGoods seckillGoods = new SeckillGoods();
+            //  1:表示审核通过 ，2：表示秒杀结束
+            seckillGoods.setStatus("2");
+            seckillGoodsMapper.update(seckillGoods,seckillGoodsQueryWrapper);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //  手动确认消息
+        channel.basicAck(message.getMessageProperties().getDeliveryTag(),false);
+    }
+
+
+
+
+
+
     /**
      * 获取秒杀成功用户信息的监听器
      * @param userRecode
