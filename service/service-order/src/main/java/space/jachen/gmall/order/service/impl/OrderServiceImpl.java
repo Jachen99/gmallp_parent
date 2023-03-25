@@ -203,6 +203,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderInfoMapper,OrderInfo> imp
         orderInfo.setOrderStatus(processStatus.getOrderStatus().name());
 
         orderInfoMapper.updateById(orderInfo);
+        sendOrderStatus(orderId);
     }
 
     @Override

@@ -24,4 +24,16 @@ public interface SeckillGoodsService {
     SeckillGoods getSeckillGoods(Long id);
 
 
+    /**
+     * 秒杀商品预下单
+     * @param skuId
+     * @param userId
+     */
+    void seckillOrder(Long skuId, String userId);
+
+    /**
+     * 更新库存
+     * @param skuId
+     */
+    void updateStockCount(Long skuId);
 }

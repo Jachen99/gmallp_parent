@@ -14,19 +14,19 @@ public class CacheHelper {
     /**
      * 缓存容器
      */
-    private final static Map<String, Object> cacheMap = new ConcurrentHashMap<>();
+    private final static Map<String, String> cacheMap = new ConcurrentHashMap<>();
 
     /**
      * 加入缓存
      */
-    public static void put(String key, Object cacheObject) {
-        cacheMap.put(key, cacheObject);
+    public static void put(String key, String cacheStr) {
+        cacheMap.put(key, cacheStr);
     }
 
     /**
      * 获取缓存
      */
-    public static Object get(String key) {
+    public static String get(String key) {
         return cacheMap.get(key);
     }
 

@@ -12,10 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import space.jachen.gmall.activity.mapper.SeckillGoodsMapper;
+import space.jachen.gmall.activity.service.SeckillGoodsService;
 import space.jachen.gmall.common.constant.MqConst;
 import space.jachen.gmall.common.constant.RedisConst;
 import space.jachen.gmall.common.util.DateUtil;
 import space.jachen.gmall.domain.activity.SeckillGoods;
+import space.jachen.gmall.domain.activity.UserRecode;
 
 import java.util.Date;
 import java.util.List;
@@ -33,6 +35,48 @@ public class SeckillReceiver {
     @Autowired
     private SeckillGoodsMapper seckillGoodsMapper;
 
+    @Autowired
+    private SeckillGoodsService seckillGoodsService;
+
+
+    /**
+     * 获取秒杀成功用户信息的监听器
+     * @param userRecode
+     * @param message
+     * @param channel
+     */
+    @SneakyThrows
+    @RabbitListener(
+            bindings = @QueueBinding(
+                    value = @Queue(value = MqConst.QUEUE_SECKILL_USER,durable = "true",autoDelete = "false"),
+                    exchange = @Exchange(value = MqConst.EXCHANGE_DIRECT_SECKILL_USER),
+                    key = {MqConst.ROUTING_SECKILL_USER}
+            )
+    )
+    public void seckillUser(UserRecode userRecode,Message message,Channel channel){
+
+        try {
+            //  判断接收过来的数据
+            if (userRecode!=null){
+                //  预下单处理！
+                seckillGoodsService.seckillOrder(userRecode.getSkuId(),userRecode.getUserId());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        channel.basicAck(message.getMessageProperties().getDeliveryTag(),false);
+    }
+
+
+
+
+
+    /**
+     * 监听预热秒杀商品的定时任务
+     * @param message
+     * @param channel
+     */
     @SneakyThrows
     @RabbitListener(bindings = @QueueBinding(
             value = @Queue(value = MqConst.QUEUE_TASK_1,durable = "true",autoDelete = "false"),

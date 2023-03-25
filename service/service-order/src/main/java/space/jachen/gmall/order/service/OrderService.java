@@ -56,14 +56,6 @@ public interface OrderService extends IService<OrderInfo> {
     OrderInfo getOrderInfo(Long orderId);
 
 
-
-    /**
-     * 处理过期订单
-     * @param orderId
-     */
-    void execExpiredOrder(Long orderId);
-
-
     /**
      * 根据订单Id 修改订单的状态
      * @param orderId
