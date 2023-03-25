@@ -8,6 +8,8 @@ import space.jachen.gmall.activity.mapper.SeckillGoodsMapper;
 import space.jachen.gmall.activity.service.SeckillGoodsService;
 import space.jachen.gmall.activity.utils.CacheHelper;
 import space.jachen.gmall.common.constant.RedisConst;
+import space.jachen.gmall.common.result.Result;
+import space.jachen.gmall.common.result.ResultCodeEnum;
 import space.jachen.gmall.common.util.MD5;
 import space.jachen.gmall.domain.activity.OrderRecode;
 import space.jachen.gmall.domain.activity.SeckillGoods;
@@ -31,6 +33,44 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
     @Autowired
     private SeckillGoodsMapper seckillGoodsMapper;
 
+
+    @Override
+    public Result checkOrder(Long skuId, String userId) {
+
+        // 查看redis缓存是否有该用户  setIfAbsent
+        Boolean hasUserKey = redisTemplate.hasKey(RedisConst.SECKILL_USER + userId);
+        if (hasUserKey){
+            // 判断用户是否下单
+            Boolean hasOrderKey = redisTemplate.opsForHash().hasKey(RedisConst.SECKILL_ORDERS, userId);
+            if (hasOrderKey){
+                // 获取用户下单记录
+                OrderRecode recode = (OrderRecode) redisTemplate.opsForHash().get(RedisConst.SECKILL_ORDERS, userId);
+
+                return Result.build(recode, ResultCodeEnum.SECKILL_SUCCESS);
+            }
+
+            return Result.build("很遗憾，没抢到",ResultCodeEnum.SECKILL_FAIL);
+        }
+
+        //判断是否下单  这里SECKILL_ORDERS_USERS 需要在下单方法中设置  而不是此方法
+        boolean isExistOrder = redisTemplate.boundHashOps(RedisConst.SECKILL_ORDERS_USERS).hasKey(userId);
+        if(isExistOrder) {
+            String orderId = (String) redisTemplate.boundHashOps(RedisConst.SECKILL_ORDERS_USERS).get(userId);
+            // 预下单成功
+            return Result.build(orderId, ResultCodeEnum.SECKILL_ORDER_SUCCESS);
+        }
+
+        String state = (String) CacheHelper.get(skuId.toString());
+        if("0".equals(state)) {
+
+            return Result.build("已售罄", ResultCodeEnum.SECKILL_FAIL);
+        }else if ("1".equals(state)){
+
+            return Result.build("正在排队中", ResultCodeEnum.SECKILL_RUN);
+        }
+
+        return Result.build("非法请求", ResultCodeEnum.SECKILL_ILLEGAL);
+    }
 
     /**
      * 查询全部
@@ -105,7 +145,7 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
                 seckillGoods.setStockCount(size.intValue());
                 seckillGoodsMapper.updateById(seckillGoods);
 
-                // 更新缓存 
+                // 更新缓存
                 redisTemplate.boundHashOps(RedisConst.SECKILL_GOODS).put(seckillGoods.getSkuId().toString(),seckillGoods);
             }
         } catch (Exception e) {

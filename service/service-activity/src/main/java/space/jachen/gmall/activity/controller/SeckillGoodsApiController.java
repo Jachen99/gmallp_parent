@@ -43,6 +43,21 @@ public class SeckillGoodsApiController {
     private RabbitTemplate rabbitTemplate;
 
 
+    /**
+     * 查看订单状态 展示轮询排队页面
+     * @param skuId
+     * @param request
+     * @return
+     */
+    @GetMapping(value = "auth/checkOrder/{skuId}")
+    public Result checkOrder(@PathVariable Long skuId, HttpServletRequest request) {
+        //当前登录用户
+        String userId = AuthContextHolder.getUserId(request);
+        return seckillGoodsService.checkOrder(skuId, userId);
+    }
+
+
+
 
     /**
      * 根据用户和商品ID实现秒杀下单
