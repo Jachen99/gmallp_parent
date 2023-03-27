@@ -38,7 +38,7 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
     public Result checkOrder(Long skuId, String userId) {
 
         // 查看redis缓存是否有该用户  setIfAbsent
-        Boolean hasUserKey = redisTemplate.hasKey(RedisConst.SECKILL_USER + userId);
+        Boolean hasUserKey = redisTemplate.hasKey(RedisConst.SECKILL_USER + userId + ":" + skuId);
         if (hasUserKey){
             // 判断用户是否下单
             Boolean hasOrderKey = redisTemplate.opsForHash().hasKey(RedisConst.SECKILL_ORDERS, userId);
@@ -48,18 +48,18 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
 
                 return Result.build(recode, ResultCodeEnum.SECKILL_SUCCESS);
             }
+            //判断是否下单  这里SECKILL_ORDERS_USERS 需要在下单方法中设置  而不是此方法
+            boolean isExistOrder = redisTemplate.boundHashOps(RedisConst.SECKILL_ORDERS_USERS).hasKey(userId);
+            if(isExistOrder) {
+                String orderId = (String) redisTemplate.boundHashOps(RedisConst.SECKILL_ORDERS_USERS).get(userId);
+                // 预下单成功
+                return Result.build(orderId, ResultCodeEnum.SECKILL_ORDER_SUCCESS);
+            }
 
             return Result.build("很遗憾，没抢到",ResultCodeEnum.SECKILL_FAIL);
         }
 
-        //判断是否下单  这里SECKILL_ORDERS_USERS 需要在下单方法中设置  而不是此方法
-        boolean isExistOrder = redisTemplate.boundHashOps(RedisConst.SECKILL_ORDERS_USERS).hasKey(userId);
-        if(isExistOrder) {
-            String orderId = (String) redisTemplate.boundHashOps(RedisConst.SECKILL_ORDERS_USERS).get(userId);
-            // 预下单成功
-            return Result.build(orderId, ResultCodeEnum.SECKILL_ORDER_SUCCESS);
-        }
-
+        //  没有用户记录 ===》 获取状态位
         String state = (String) CacheHelper.get(skuId.toString());
         if("0".equals(state)) {
 
@@ -103,7 +103,7 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
         String status = CacheHelper.get(skuId.toString());
         if (!"1".equals(status)) return;
         // 判断用户是否下单  防止超卖  +skuId 可以让用户秒杀多种品类的商品 每种限购1个
-        Boolean ifAbsent = redisTemplate.opsForValue().setIfAbsent(RedisConst.SECKILL_USER + userId + skuId, "",
+        Boolean ifAbsent = redisTemplate.opsForValue().setIfAbsent(RedisConst.SECKILL_USER + userId + ":" + skuId, "",
                 RedisConst.SECKILL__TIMEOUT, TimeUnit.SECONDS);
         if (!ifAbsent) return;
         // 进行秒杀商品预下单 goodsId不存在则已卖光  存在可以进行下单

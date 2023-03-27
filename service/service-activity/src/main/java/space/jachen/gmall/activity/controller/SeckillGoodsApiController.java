@@ -50,6 +50,12 @@ public class SeckillGoodsApiController {
     @Autowired
     private OrderFeignClient orderFeignClient;
 
+    /**
+     * 提交订单
+     * @param orderInfo
+     * @param request
+     * @return
+     */
     @PostMapping("auth/submitOrder")
     public Result submitOrder(@RequestBody OrderInfo orderInfo, HttpServletRequest request) {
         String userId = AuthContextHolder.getUserId(request);
@@ -70,52 +76,53 @@ public class SeckillGoodsApiController {
 
 
     /**
-     * 秒杀确认订单
+     * 封装秒杀确认订单
      * @param request
      * @return
      */
     @GetMapping("auth/trade")
     public Result<Map<String,Object>> trade(HttpServletRequest request) {
+        Map<String, Object> result = new HashMap<>();
         // 获取到用户Id
         String userId = AuthContextHolder.getUserId(request);
-
-        // 先得到用户想要购买的商品！
+        // 先得到用户想要购买的商品
         OrderRecode orderRecode = (OrderRecode) redisTemplate.boundHashOps(RedisConst.SECKILL_ORDERS).get(userId);
         if (null == orderRecode) {
             return Result.fail();
         }
         SeckillGoods seckillGoods = orderRecode.getSeckillGoods();
-
         // 获取商品详情list
-        ArrayList<OrderDetail> detailArrayList = getDetailArrayList(orderRecode, seckillGoods);
-
+        List<OrderDetail> detailArrayList = getDetailArrayList(orderRecode, seckillGoods);
+        result.put("detailArrayList", detailArrayList);
         // 计算总金额
         OrderInfo orderInfo = new OrderInfo();
         orderInfo.setOrderDetailList(detailArrayList);
         orderInfo.sumTotalAmount();
-
+        result.put("totalAmount", orderInfo.getTotalAmount());
         //获取用户地址
         List<UserAddress> userAddressList = userFeignClient.findUserAddressListByUserId(userId);
-        Map<String, Object> result = new HashMap<>();
         result.put("userAddressList", userAddressList);
-        result.put("detailArrayList", detailArrayList);
-        result.put("totalAmount", orderInfo.getTotalAmount());
 
         return Result.ok(result);
     }
 
-    private static ArrayList<OrderDetail> getDetailArrayList(OrderRecode orderRecode, SeckillGoods seckillGoods) {
+    /**
+     * 封装订单明细数据
+     * @param orderRecode
+     * @param seckillGoods
+     * @return
+     */
+    private static List<OrderDetail> getDetailArrayList(OrderRecode orderRecode, SeckillGoods seckillGoods) {
         // 声明一个集合来存储订单明细
-        ArrayList<OrderDetail> detailArrayList = new ArrayList<>();
+        List<OrderDetail> detailArrayList = new ArrayList<>();
         OrderDetail orderDetail = new OrderDetail();
         orderDetail.setSkuId(seckillGoods.getSkuId());
         orderDetail.setSkuName(seckillGoods.getSkuName());
         orderDetail.setImgUrl(seckillGoods.getSkuDefaultImg());
-        orderDetail.setSkuNum(orderRecode.getNum());
+        orderDetail.setSkuNum(orderRecode.getNum()); // 1
         orderDetail.setOrderPrice(seckillGoods.getCostPrice());
         // 添加到集合
         detailArrayList.add(orderDetail);
-
         return detailArrayList;
     }
 
