@@ -85,10 +85,6 @@ public class SeckillReceiver {
     }
 
 
-
-
-
-
     /**
      * 获取秒杀成功用户信息的监听器
      * @param userRecode

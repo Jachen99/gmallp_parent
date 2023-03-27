@@ -48,7 +48,7 @@ public class SeckillController {
 
 
     /**
-     * 开始秒杀，排队页面
+     * 钩子函数 调用排队页面
      * @param skuId
      * @param skuIdStr
      * @param request

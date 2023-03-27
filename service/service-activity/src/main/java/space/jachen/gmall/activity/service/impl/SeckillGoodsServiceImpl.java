@@ -102,14 +102,14 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
         // 获取缓存中秒杀商品状态位
         String status = CacheHelper.get(skuId.toString());
         if (!"1".equals(status)) return;
-        // 判断用户是否下单  防止超卖
-        Boolean ifAbsent = redisTemplate.opsForValue().setIfAbsent(RedisConst.SECKILL_USER + userId, skuId,
+        // 判断用户是否下单  防止超卖  +skuId 可以让用户秒杀多种品类的商品 每种限购1个
+        Boolean ifAbsent = redisTemplate.opsForValue().setIfAbsent(RedisConst.SECKILL_USER + userId + skuId, "",
                 RedisConst.SECKILL__TIMEOUT, TimeUnit.SECONDS);
         if (!ifAbsent) return;
         // 进行秒杀商品预下单 goodsId不存在则已卖光  存在可以进行下单
         String goodsId = (String) redisTemplate.boundListOps(RedisConst.SECKILL_STOCK_PREFIX + skuId).rightPop();
         if (StringUtils.isEmpty(goodsId)) {
-            //商品售罄，更新状态位
+            //商品售罄，同步更新状态位 【库存没了】
             redisTemplate.convertAndSend("seckillpush", skuId+":0");return;
         }
         // 保存预订单信息
@@ -146,7 +146,10 @@ public class SeckillGoodsServiceImpl implements SeckillGoodsService {
                 seckillGoodsMapper.updateById(seckillGoods);
 
                 // 更新缓存
-                redisTemplate.boundHashOps(RedisConst.SECKILL_GOODS).put(seckillGoods.getSkuId().toString(),seckillGoods);
+                redisTemplate.boundHashOps(RedisConst.SECKILL_GOODS)
+                        .put(seckillGoods.getSkuId().toString(),seckillGoods);
+                // 更新mysql秒杀对象
+                seckillGoodsMapper.updateById(seckillGoods);
             }
         } catch (Exception e) {
             lock.unlock();

@@ -142,7 +142,7 @@ public class SeckillGoodsApiController {
      * @return
      */
     @PostMapping("auth/seckillOrder/{skuId}")
-    public Result seckillOrder(@PathVariable Long skuId, HttpServletRequest request){
+    public Result seckillOrder(@PathVariable String skuId, HttpServletRequest request){
 
         // 获取用户id
         String userId = AuthContextHolder.getUserId(request);
@@ -150,12 +150,10 @@ public class SeckillGoodsApiController {
         String skuIdStr = request.getParameter("skuIdStr");
         if (StringUtils.isEmpty(userId)||StringUtils.isEmpty(skuIdStr))
             return Result.fail().message("您没有秒杀资格");
-        if (MD5.encrypt(userId).equals(skuId.toString()))
+        if (!MD5.encrypt(userId+skuId).equals(skuIdStr))
             return Result.build("您不是合法用户！", ResultCodeEnum.ILLEGAL_REQUEST);
-        // 从本地缓存获取 秒杀状态位
-        String status = CacheHelper.get(skuId.toString());
-        if (StringUtils.isEmpty(status))
-            return Result.build("您不是合法用户！", ResultCodeEnum.ILLEGAL_REQUEST);
+        // 从本地缓存获取 秒杀状态位  0或1
+        String status = CacheHelper.get(skuId);
         if (!"0".equals(status)&&!"1".equals(status))
             return Result.build("您不是合法用户！", ResultCodeEnum.ILLEGAL_REQUEST);
         if ("0".equals(status))
@@ -164,7 +162,7 @@ public class SeckillGoodsApiController {
             //用户记录
             UserRecode userRecode = new UserRecode();
             userRecode.setUserId(userId);
-            userRecode.setSkuId(skuId);
+            userRecode.setSkuId(Long.parseLong(skuId));
 
             // 进入消息队列排队 等待秒杀
             rabbitTemplate.convertAndSend(MqConst.EXCHANGE_DIRECT_SECKILL_USER, MqConst.ROUTING_SECKILL_USER, userRecode);
@@ -190,7 +188,7 @@ public class SeckillGoodsApiController {
             // 比对时间大小
             if (DateUtil.dateCompare(seckillGoods.getStartTime(), curTime) && DateUtil.dateCompare(curTime, seckillGoods.getEndTime())) {
                 //可以动态生成，放在redis缓存
-                String skuIdStr = MD5.encrypt(userId);
+                String skuIdStr = MD5.encrypt(userId+skuId);
                 return Result.ok(skuIdStr);
             }
         }
