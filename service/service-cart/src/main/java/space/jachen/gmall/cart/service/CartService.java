@@ -53,4 +53,10 @@ public interface CartService {
      * @param isChecked
      */
     void allCheckCart(String userId, Integer isChecked);
+
+    /**
+     * 清空购物车
+     * @param userId
+     */
+    void clearCart(String userId);
 }

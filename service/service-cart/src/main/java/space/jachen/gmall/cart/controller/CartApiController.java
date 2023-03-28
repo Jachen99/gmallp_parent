@@ -24,6 +24,27 @@ public class CartApiController {
 
 
     /**
+     * 清空购物车
+     * @param request
+     * @return
+     */
+    @GetMapping("clearCart")
+    public Result<String> clearCart(HttpServletRequest request){
+        // 如何获取userId
+        String userId = AuthContextHolder.getUserId(request);
+        if (StringUtils.isEmpty(userId)) {
+            // 获取临时用户Id
+            userId = AuthContextHolder.getUserTempId(request);
+        }
+        cartService.clearCart(userId);
+        return Result.ok();
+    }
+
+
+
+
+
+    /**
      * 勾选所有购物车
      * @param isChecked
      * @param request

@@ -190,6 +190,14 @@ public class CartServiceImpl implements CartService {
         this.redisTemplate.opsForHash().putAll(cartKey,hashMap);
     }
 
+    @Override
+    public void clearCart(String userId) {
+        //  获取购物车key
+        String cartKey = getCartKey(userId);
+        //  删除数据
+        this.redisTemplate.delete(cartKey);
+    }
+
     /**
      * 获取购物车key
      *
