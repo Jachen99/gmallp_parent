@@ -174,6 +174,22 @@ public class CartServiceImpl implements CartService {
         return new ArrayList<>();
     }
 
+    @Override
+    public void allCheckCart(String userId, Integer isChecked) {
+        //  获取到购物车key
+        String cartKey = this.getCartKey(userId);
+        List<CartInfo> cartInfoList = this.redisTemplate.opsForHash().values(cartKey);
+        //  声明一个Map 集合
+        Map<String, Object> hashMap = new HashMap<>();
+        //  循环遍历
+        for (CartInfo cartInfo : cartInfoList) {
+            cartInfo.setIsChecked(isChecked);
+            hashMap.put(cartInfo.getSkuId().toString(),cartInfo);
+        }
+        //  将数据存储到购物车中
+        this.redisTemplate.opsForHash().putAll(cartKey,hashMap);
+    }
+
     /**
      * 获取购物车key
      *

@@ -22,6 +22,30 @@ public class CartApiController {
     @Autowired
     private CartService cartService;
 
+
+    /**
+     * 勾选所有购物车
+     * @param isChecked
+     * @param request
+     * @return
+     */
+    @GetMapping("/allCheckCart/{isChecked}")
+    public Result<String> allCheckCart(@PathVariable Integer isChecked,HttpServletRequest request){
+        //  获取用户Id
+        String userId = AuthContextHolder.getUserId(request);
+        //  判断用户Id 为空
+        if (StringUtils.isEmpty(userId)){
+            userId = AuthContextHolder.getUserTempId(request);
+        }
+
+        //  调用方法
+        this.cartService.allCheckCart(userId,isChecked);
+        //  默认返回
+        return Result.ok();
+    }
+
+
+
     /**
      * 根据用户Id 查询购物车列表
      *

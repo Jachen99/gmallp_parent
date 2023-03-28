@@ -47,4 +47,10 @@ public interface CartService {
      */
     List<CartInfo> getCartList(String userId, String userTempId);
 
+    /**
+     * 勾选所有购物车
+     * @param userId
+     * @param isChecked
+     */
+    void allCheckCart(String userId, Integer isChecked);
 }
